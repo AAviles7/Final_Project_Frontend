@@ -56,10 +56,13 @@ state = {
           })
           .then((user) => {
             this.props.login(user);
-            this.props.history.replace("/select_workspace");
+            this.props.history.push("/select_workspace");
         })
-          .catch(() => {
-              alert('Invalid Login Please Try Again!')
+          .catch(({ error }) => {
+            this.setState({
+                error,
+              });
+            alert('Invalid Login Please Try Again!')
         });
     };
     
@@ -112,5 +115,6 @@ state = {
         )
     }
 }
+
 
 export default Login

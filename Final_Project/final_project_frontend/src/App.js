@@ -10,34 +10,32 @@ import "semantic-ui-css/semantic.min.css";
 import Login from './containers/Login'
 import Logout from './components/Logout'
 import WorkspaceMenu from './containers/WorkspaceMenu'
-import { Provider } from 'react-redux'
+import WorkspaceJoin from './containers/WorkspaceJoin'
+import Workspace from './containers/Workspace'
+import { connect } from 'react-redux'
+
+let WORKSPACE_URL = 'http://127.0.0.1:4000/workspaces'
 
 class App extends Component {
 
-  constructor(props) {
-    super(props);
-
-    const storedUser = localStorage.getItem("user");
-    const user = storedUser ? JSON.parse(storedUser) : null;
-
-    this.state = {
-      user
-    };
+  componentDidMount = async () => {
+    const res = await fetch(WORKSPACE_URL)
+    const workspaces = await res.json()
+    this.props.get_workspaces(workspaces)
   }
 
   login = (user) => {
     localStorage.setItem("user", JSON.stringify(user));
-    this.setState({ user });
+    this.props.login_user(user)
   };
 
   logout = () => {
     localStorage.removeItem("user");
-    this.setState({ user: null });
+    this.props.logout_user()
   };
 
   render(){
     return(
-      <Container>
         <Router>
           <Switch>
             <Route
@@ -46,7 +44,7 @@ class App extends Component {
                 <Login login={this.login} {...routeProps} />
               )}
             />
-            {!this.state.user && (
+            {!this.props.user && (
                 <Route path="/">
                   <Redirect to="/login" />
                 </Route>
@@ -56,6 +54,20 @@ class App extends Component {
               path="/select_workspace"
               render={(routeProps) => (
                 <WorkspaceMenu {...routeProps} />
+              )}
+            />
+            <Route
+              exact
+              path={this.props.selected ? `/join_workspace/${this.props.selected.name}` : '/join_workspace'}
+              render={(routeProps) => (
+                <WorkspaceJoin workspace={this.props.selected} {...routeProps} />
+              )}
+            />
+            <Route
+              exact
+              path={this.props.selected ? `/workspace/${this.props.selected.name}` : '/workspace'}
+              render={(routeProps) => (
+                <Workspace workspace={this.props.selected} {...routeProps} />
               )}
             />
             <Route
@@ -73,9 +85,23 @@ class App extends Component {
             />
           </Switch>
         </Router>
-      </Container>
     )
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+      user: state.user.user,
+      selected: state.workspace.selected
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+      get_workspaces: (workspaces) => dispatch({ type: 'GET_WORKSPACES', workspaces: workspaces }),
+      login_user: (user) => dispatch({ type: 'GET_USER', user }),
+      logout_user: () => dispatch({ type: 'LOGOUT_USER' })
+  }
+}
+
+export default connect(mapStateToProps ,mapDispatchToProps)(App);

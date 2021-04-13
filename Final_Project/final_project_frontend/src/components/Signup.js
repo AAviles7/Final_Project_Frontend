@@ -23,7 +23,9 @@ class Signup extends Component {
         })
     }
 
-    handleSubmit = () => { 
+    handleSubmit = (event) => { 
+        event.preventDefault()
+
         let newUser = {
             username: this.state.username,
             password: this.state.password,
@@ -46,11 +48,13 @@ class Signup extends Component {
                 this.props.close();
                 alert('Account created! You can now login!')
             })
+
+        event.target.reset()
     }
 
     render(){
         return(
-            <Form>
+            <Form onSubmit={(event) => this.handleSubmit(event)}>
                 <Form.Group widths='equal'>
                     <Form.Input fluid label='Username' placeholder='Username' onChange={(event) => this.setState({ username: event.target.value })} />
                     <Form.Input fluid label='Password' placeholder='Password' onChange={(event) => this.setState({ password: event.target.value })} />
@@ -63,7 +67,7 @@ class Signup extends Component {
                 </Form.Group>
 
                 <Form.TextArea label='Bio' placeholder='Tell us more about you... (Can be editted later)' onChange={(event) => this.setState({ bio: event.target.value })} />
-                <Form.Button onClick={this.handleSubmit}>Submit</Form.Button>
+                <Form.Button type='submit'>Submit</Form.Button>
             </Form>
         )
     }
