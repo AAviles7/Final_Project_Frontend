@@ -1,4 +1,4 @@
-const workspaceReducer = (state ={ workspaces: [], selected: null }, action) => {
+const workspaceReducer = (state ={ workspaces: [], selected_workspace: null, target: null }, action) => {
     switch(action.type){
         case 'GET_WORKSPACES':
             return{
@@ -14,6 +14,11 @@ const workspaceReducer = (state ={ workspaces: [], selected: null }, action) => 
             return{
                 ...state,
                 selected: action.workspace
+            }
+        case 'SELECT_TARGET':
+            return{
+                ...state,
+                target: action.target
             }
         default:
             return state

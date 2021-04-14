@@ -1,7 +1,12 @@
-import { Grid, List } from "semantic-ui-react"
+import { Divider, Grid, List } from "semantic-ui-react"
 import { connect } from 'react-redux'
+import ChannelList from '../components/ChannelList'
+import UserList from '../components/UserList'
+import WorkspaceMain from '../components/WorkspaceMain'
+import WorkspaceDetails from '../components/WorkspaceDetails'
+import WorkspaceThread from '../components/WorkspaceThread'
 
-const Workspace = () => {
+const Workspace = ({ channels, users }) => {
     return(
         <Grid celled id='workspaceContainer'>
             <Grid.Row id='workspaceTopbar'>
@@ -9,15 +14,19 @@ const Workspace = () => {
             </Grid.Row>
             <Grid.Row>
                 <Grid.Column id='workspaceLeftbar'>
-                    <List divided relaxed>
-                        {}
+                    <List relaxed>
+                        {channels.map((channel) => <ChannelList channel={channel} key={channel.id}/>)}
+                    </List>
+                    <Divider />
+                    <List relaxed>
+                        {users.map((user) => <UserList user={user} key={user.id} />)}
                     </List>
                 </Grid.Column>
                 <Grid.Column id='workspaceMain'>
-
+                    <WorkspaceMain />
                 </Grid.Column>
                 <Grid.Column id='workspaceRightbar'>
-
+                        
                 </Grid.Column>
             </Grid.Row>
         </Grid>
@@ -28,14 +37,13 @@ const mapStateToProps = (state) => {
     return {
         channels: state.workspace.selected.channels,
         users: state.workspace.selected.users,
-        user: state.user.user,
-        selected_channel: state.channel.selected
+        user: state.user.user
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        get_selected: (channel) => dispatch({ type: 'SELECT_CHANNEL', channel})
+        // select: (target) => dispatch({ type: 'SELECT_TARGET', target})
     }
 }
 

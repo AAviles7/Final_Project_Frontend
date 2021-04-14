@@ -1,10 +1,5 @@
-const channelReducer = ( state = { channels: [], selected: null }, action) => {
+const channelReducer = ( state = { selected: null }, action) => {
     switch(action.type){
-        case 'GET_CHANNELS':
-            return{
-                ...state,
-                channels: action.channels
-            }
         case 'SELECT_CHANNEL':
             return{
                 ...state,
