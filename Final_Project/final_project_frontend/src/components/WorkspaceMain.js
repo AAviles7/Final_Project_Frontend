@@ -17,7 +17,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        // select: (target) => dispatch({ type: 'SELECT_TARGET', target})
+        
     }
 }
 

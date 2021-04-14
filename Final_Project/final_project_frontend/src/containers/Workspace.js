@@ -7,13 +7,18 @@ import WorkspaceDetails from '../components/WorkspaceDetails'
 import WorkspaceThread from '../components/WorkspaceThread'
 
 const Workspace = ({ channels, users }) => {
+
+    let left = 2
+    let center = 12
+    let right = 2
+
     return(
-        <Grid celled id='workspaceContainer'>
+        <Grid celled padded={false} id='workspace'>
             <Grid.Row id='workspaceTopbar'>
 
             </Grid.Row>
-            <Grid.Row>
-                <Grid.Column id='workspaceLeftbar'>
+            <Grid.Row id='workspaceContainer'>
+                <Grid.Column id='workspaceLeftbar' width={left}>
                     <List relaxed>
                         {channels.map((channel) => <ChannelList channel={channel} key={channel.id}/>)}
                     </List>
@@ -22,10 +27,10 @@ const Workspace = ({ channels, users }) => {
                         {users.map((user) => <UserList user={user} key={user.id} />)}
                     </List>
                 </Grid.Column>
-                <Grid.Column id='workspaceMain'>
+                <Grid.Column id='workspaceMain' width={center}>
                     <WorkspaceMain />
                 </Grid.Column>
-                <Grid.Column id='workspaceRightbar'>
+                <Grid.Column id='workspaceRightbar' width={right}>
                         
                 </Grid.Column>
             </Grid.Row>
