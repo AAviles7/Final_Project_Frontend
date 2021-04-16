@@ -3,6 +3,7 @@ import { Button, Divider, Form, Grid, Segment, Container, Image } from 'semantic
 import { TransitionablePortal } from 'semantic-ui-react'
 import Signup from '../components/Signup'
 import Hedwig from '../images/Hedwig.png'
+import { API_LOGIN } from '../constants'
 
 class Login extends Component {
 
@@ -42,7 +43,7 @@ state = {
           body: JSON.stringify({ user: newUser }),
         };
     
-        fetch("http://127.0.0.1:4000/login", reqObj)
+        fetch(API_LOGIN, reqObj)
           .then((res) => {
             const jsonPromise = res.json();
     

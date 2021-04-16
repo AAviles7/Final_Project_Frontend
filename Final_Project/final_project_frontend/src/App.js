@@ -12,13 +12,12 @@ import WorkspaceMenu from './containers/WorkspaceMenu'
 import WorkspaceJoin from './containers/WorkspaceJoin'
 import Workspace from './containers/Workspace'
 import { connect } from 'react-redux'
-
-let WORKSPACE_URL = 'http://127.0.0.1:4000/workspaces'
+import { API_WORKSPACES } from './constants'
 
 class App extends Component {
 
   componentDidMount = async () => {
-    const res = await fetch(WORKSPACE_URL)
+    const res = await fetch(API_WORKSPACES)
     const workspaces = await res.json()
     this.props.get_workspaces(workspaces)
   }

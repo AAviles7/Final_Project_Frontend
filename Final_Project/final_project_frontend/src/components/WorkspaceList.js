@@ -1,12 +1,14 @@
 import { List } from "semantic-ui-react"
+import { connect } from 'react-redux'
 
-const WorkspaceList = ({ workspace, select, history }) => {
+
+const WorkspaceList = ({ workspace, get_selected, history }) => {
     return(
         <List.Item>
             <List.Icon name='chat' size='large' verticalAlign='middle' />
             <List.Content>
                 <List.Header as='a' onClick={() => {
-                    select(workspace);
+                    get_selected(workspace);
                     history.push(`/join_workspace/${workspace.name}`);
                     }} >{workspace.name}</List.Header>
             </List.Content>
@@ -14,4 +16,10 @@ const WorkspaceList = ({ workspace, select, history }) => {
     )
 }
 
-export default WorkspaceList
+const mapDispatchToProps = (dispatch) => {
+    return {
+        get_selected: (workspace) => dispatch({ type: 'GET_SELECTED', workspace})
+    }
+}
+
+export default connect(null, mapDispatchToProps)(WorkspaceList)

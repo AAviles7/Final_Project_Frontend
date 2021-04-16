@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import ChatroomList from '../components/ChatroomList'
 import WorkspaceMain from '../components/WorkspaceMain'
 import React, { useEffect } from 'react'
-import Cable from '../components/Cable'
+// import Cable from '../components/Cable'
 import { ActionCableConsumer } from 'react-actioncable-provider';
 
-const Workspace = ({ workspace, set_chatrooms, workspace_chatrooms, add_chatroom }) => {
+const Workspace = ({ workspace, set_chatrooms, workspace_chatrooms, add_chatroom, target }) => {
 
     useEffect(() => {
         const fetchData = async () => {
@@ -39,7 +39,7 @@ const Workspace = ({ workspace, set_chatrooms, workspace_chatrooms, add_chatroom
                         </List>
                     </Grid.Column>
                     <Grid.Column id='workspaceMain' width={center}>
-                        <WorkspaceMain />
+                        {target !== null ? <WorkspaceMain /> : null}
                     </Grid.Column>
                     <Grid.Column id='workspaceRightbar' width={right}>
                             

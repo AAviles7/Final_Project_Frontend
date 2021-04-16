@@ -1,7 +1,6 @@
-import React, { Component } from "react";
-import { Form } from "semantic-ui-react"
-
-let WORKSPACE_URL = 'http://127.0.0.1:4000/workspaces'
+import React, { Component, Fragment } from "react";
+import { Checkbox, Divider, Form, Header } from "semantic-ui-react"
+import { API_WORKSPACES } from '../constants'
 
 class WorkspaceForm extends Component {
 
@@ -30,29 +29,33 @@ class WorkspaceForm extends Component {
             body: JSON.stringify(newWorkspace),
         }
 
-        fetch(WORKSPACE_URL, reqObj)
+        fetch(API_WORKSPACES, reqObj)
             .then((res) => res.json())
             .then((workspace) => {
                 this.props.add(workspace);
                 this.resetStates()
             })
-
+        
         event.target.reset()
     }
 
     render(){
         return(
-            <Form onSubmit={(event) => this.handleSubmit(event)}>
-                <Form.Field onChange={(event) => this.setState({ name: event.target.value })}>
-                    <label>Name</label>
-                    <input placeholder='Enter Name for new workspace' />
-                </Form.Field>
-                <Form.Field onChange={(event) => this.setState({ join_code: event.target.value })}>
-                    <label>Join Code</label>
-                    <input placeholder='Enter Join Code for users to join workspace' />
-                </Form.Field>
-                <Form.Button type='submit'>Submit</Form.Button>
-            </Form>
+            <Fragment>
+                <Header as='h1'>Join existing Workspace or Create a new Workspace</Header>
+                <Divider />
+                <Form onSubmit={(event) => this.handleSubmit(event)}>
+                    <Form.Field onChange={(event) => this.setState({ name: event.target.value })}>
+                        <label>Name</label>
+                        <input placeholder='Enter Name for new workspace' />
+                    </Form.Field>
+                    <Form.Field onChange={(event) => this.setState({ join_code: event.target.value })}>
+                        <label>Join Code</label>
+                        <input placeholder='Enter Join Code for users to join workspace' />
+                    </Form.Field>
+                    <Form.Button type='submit'>Submit</Form.Button>
+                </Form>
+            </Fragment>
         )
     }
 }

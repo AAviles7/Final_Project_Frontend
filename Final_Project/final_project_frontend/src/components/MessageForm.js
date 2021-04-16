@@ -1,9 +1,7 @@
 import { useState } from "react"
 import { Button, Form, TextArea } from "semantic-ui-react"
 import { connect } from 'react-redux'
-
-let CHATROOMMESSAGES_URL = 'http://127.0.0.1:4000/chatroom_messages'
-
+import { API_CHATROOM_MESSAGES } from '../constants'
 
 const MessageForm = ({ chatroom, user, send_message}) => {
     const [body, setBody] = useState('')
@@ -20,7 +18,7 @@ const MessageForm = ({ chatroom, user, send_message}) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newMsg)
         }
-        const res = await fetch(CHATROOMMESSAGES_URL, rqObj)
+        const res = await fetch(API_CHATROOM_MESSAGES, rqObj)
         const message = await res.json()
         send_message(message)
     }

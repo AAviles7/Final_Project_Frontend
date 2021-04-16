@@ -1,22 +1,21 @@
-import { Container, Grid, List } from "semantic-ui-react"
+import { Container, Grid } from "semantic-ui-react"
 import { connect } from 'react-redux'
-import WorkspaceList from '../components/WorkspaceList'
 import WorkspaceForm from '../components/WorkspaceForm'
+import WorkspaceMenulist from '../components/WorkspaceMenuList'
+import { Fragment } from "react"
 
-const WorkspaceMenu = ({ workspaces, add_workspace, get_selected, history }) => {
+const WorkspaceMenu = ({ add_workspace, history }) => {
     return(
-        <Container>
-            <Grid celled >
-                <Grid.Column width={3}>
-                    <List divided relaxed>
-                        {workspaces.map((workspace) => <WorkspaceList history={history} select={get_selected} workspace={workspace} key={workspace.id}/>)}
-                    </List>
+        <Fragment>
+            <Grid celled id='workspacemenu'>
+                <Grid.Column width={4} id='workspacemenulist'>
+                    <WorkspaceMenulist history={history} />
                 </Grid.Column>
-                <Grid.Column width={13}>
+                <Grid.Column width={12} id='workspacemenuform'>
                     <WorkspaceForm add={add_workspace}/>
                 </Grid.Column>
             </Grid>
-        </Container>
+        </Fragment>
     )
 }
 
@@ -28,7 +27,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        get_workspaces: (workspaces) => dispatch({ type: 'GET_WORKSPACES', workspaces: workspaces }),
         add_workspace: (workspace) => dispatch({ type: 'ADD_WORKSPACE', workspace }),
         get_selected: (workspace) => dispatch({ type: 'GET_SELECTED', workspace})
     }

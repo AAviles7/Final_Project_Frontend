@@ -1,30 +1,33 @@
-import { Component } from "react"
+import { useState } from "react"
 import { Container, Header, Input, Button } from "semantic-ui-react"
+import { connect } from 'react-redux'
 
-class WorkspaceJoin extends Component{
 
-    state = {
-        join_code: ''
-    }
+const WorkspaceJoin = ({ workspace, history }) => {
+    const [join_code, setCode] = useState('')
 
-    handleClick = () => {
-        if(this.props.workspace.join_code !== this.state.join_code){
+    const handleClick = () => {
+        if(workspace.join_code !== join_code){
             alert('Invalid Join Code')
         }else{
-            this.props.history.push(`/workspace/${this.props.workspace.name}`)
+            history.push(`/workspace/${workspace.name}`)
         }
     }
 
-    render(){
-        return(
-            <Container>
-                <Header as='h1'>{this.props.workspace.name}</Header>
-                <Input placeholder='Please Enter Join code' onChange={(event) => this.setState({ join_code: event.target.value })}/>
-                <Button onClick={this.handleClick}>Join Work Space</Button>
-                <Button onClick={() => this.props.history.goBack()}>Go Back</Button>
-            </Container>
-        )
-    }
+    return(
+        <Container>
+            <Header as='h1'>{workspace.name}</Header>
+            <Input placeholder='Please Enter Join code' onChange={(event) => setCode(event.target.value)}/>
+            <Button onClick={handleClick}>Join Work Space</Button>
+            <Button onClick={() => history.goBack()}>Go Back</Button>
+        </Container>
+    )
 }
 
-export default WorkspaceJoin
+const mapStateToProps = (state) => {
+    return {
+        workspace: state.workspace.selected_workspace
+    }
+  }
+
+export default connect(mapStateToProps)(WorkspaceJoin)

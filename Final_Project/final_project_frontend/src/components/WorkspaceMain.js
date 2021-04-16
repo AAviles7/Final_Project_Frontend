@@ -2,8 +2,10 @@ import { Header } from "semantic-ui-react"
 import { connect } from 'react-redux'
 import { Fragment } from "react"
 import MessageForm from '../components/MessageForm'
+import { ActionCableConsumer } from 'react-actioncable-provider'
 
-const WorkspaceMain = ({ chatroom, messages}) => {
+
+const WorkspaceMain = ({ chatroom, messages, add_message}) => {
     return(
         <Fragment>
             <ActionCableConsumer 
@@ -28,7 +30,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        // get_chatroom_data: (target) => dispatch({ type: 'GET_DATA', target})
+        add_message: (message) => dispatch({ type: 'ADD_MESSAGE', message})
     }
 }
 

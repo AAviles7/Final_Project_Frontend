@@ -16,3 +16,16 @@ body {
     height: 80vh;
 }
 
+#workspacemenu {
+    max-height: 95vh;
+}
+
+#workspacemenulist, #workspacemenuform {
+    height: 95vh;
+}
+
+#workspacemenulist {
+    max-width: 300px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
