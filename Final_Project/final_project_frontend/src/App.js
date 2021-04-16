@@ -5,7 +5,6 @@ import {
   Switch,
   Redirect,
 } from "react-router-dom";
-import { Container } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import Login from './containers/Login'
 import Logout from './components/Logout'
@@ -58,14 +57,14 @@ class App extends Component {
             />
             <Route
               exact
-              path={this.props.selected ? `/join_workspace/${this.props.selected.name}` : '/join_workspace'}
+              path={this.props.selected ? `/join_workspace/${this.props.selected.name}` : null}
               render={(routeProps) => (
                 <WorkspaceJoin workspace={this.props.selected} {...routeProps} />
               )}
             />
             <Route
               exact
-              path={this.props.selected ? `/workspace/${this.props.selected.name}` : '/workspace'}
+              path={this.props.selected ? `/workspace/${this.props.selected.name}` : null}
               render={(routeProps) => (
                 <Workspace workspace={this.props.selected} {...routeProps} />
               )}
@@ -92,7 +91,7 @@ class App extends Component {
 const mapStateToProps = (state) => {
   return {
       user: state.user.user,
-      selected: state.workspace.selected
+      selected: state.workspace.selected_workspace
   }
 }
 

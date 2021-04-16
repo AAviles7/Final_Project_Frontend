@@ -1,12 +1,22 @@
-import { Divider, Grid, List } from "semantic-ui-react"
+import { Grid, List } from "semantic-ui-react"
 import { connect } from 'react-redux'
-import ChannelList from '../components/ChannelList'
-import UserList from '../components/UserList'
+import ChatroomList from '../components/ChatroomList'
 import WorkspaceMain from '../components/WorkspaceMain'
-import WorkspaceDetails from '../components/WorkspaceDetails'
-import WorkspaceThread from '../components/WorkspaceThread'
+import React, { useEffect } from 'react'
+import Cable from '../components/Cable'
+import { ActionCableConsumer } from 'react-actioncable-provider';
 
-const Workspace = ({ channels, users }) => {
+const Workspace = ({ workspace, set_chatrooms, workspace_chatrooms, add_chatroom }) => {
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await fetch('http://127.0.0.1:4000/chatrooms')
+            const chatroomsAllData = await res.json()
+            const chatroomsData = chatroomsAllData.filter((chatroom) => chatroom.workspace_id === workspace.id)
+            set_chatrooms(chatroomsData) 
+        }
+        fetchData()
+    }, [workspace, set_chatrooms])
 
     let left = 2
     let center = 12
@@ -18,21 +28,23 @@ const Workspace = ({ channels, users }) => {
 
             </Grid.Row>
             <Grid.Row id='workspaceContainer'>
-                <Grid.Column id='workspaceLeftbar' width={left}>
-                    <List relaxed>
-                        {channels.map((channel) => <ChannelList channel={channel} key={channel.id}/>)}
-                    </List>
-                    <Divider />
-                    <List relaxed>
-                        {users.map((user) => <UserList user={user} key={user.id} />)}
-                    </List>
-                </Grid.Column>
-                <Grid.Column id='workspaceMain' width={center}>
-                    <WorkspaceMain />
-                </Grid.Column>
-                <Grid.Column id='workspaceRightbar' width={right}>
-                        
-                </Grid.Column>
+                <ActionCableConsumer 
+                    channel={{ channel: 'ChatroomsChannel' }}
+                    onReceived={add_chatroom}
+                >
+                    <Grid.Column id='workspaceLeftbar' width={left}>
+                        {/* {workspace_chatrooms.length ? <Cable /> : null} */}
+                        <List relaxed>
+                            {workspace_chatrooms.length ? workspace_chatrooms.map((chatroom) => <ChatroomList chatroom={chatroom} key={chatroom.id}/>) : null}
+                        </List>
+                    </Grid.Column>
+                    <Grid.Column id='workspaceMain' width={center}>
+                        <WorkspaceMain />
+                    </Grid.Column>
+                    <Grid.Column id='workspaceRightbar' width={right}>
+                            
+                    </Grid.Column>
+                </ActionCableConsumer>
             </Grid.Row>
         </Grid>
     )
@@ -40,15 +52,18 @@ const Workspace = ({ channels, users }) => {
 
 const mapStateToProps = (state) => {
     return {
-        channels: state.workspace.selected.channels,
-        users: state.workspace.selected.users,
-        user: state.user.user
+        users: state.workspace.selected_workspace.users,
+        user: state.user.user,
+        workspace_chatrooms: state.workspace.workspace_chatrooms,
+        target_chatroom: state.workspace.target
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        // select: (target) => dispatch({ type: 'SELECT_TARGET', target})
+        set_chatrooms: (workspace_chatrooms) => dispatch({ type: 'SET_CHATROOMS', workspace_chatrooms}),
+        add_chatroom: (chatroom) => dispatch({ type: 'ADD_CHATROOM', chatroom}),
+        add_message: (message) => dispatch({ type: 'ADD_MESSAGE', message})
     }
 }
 

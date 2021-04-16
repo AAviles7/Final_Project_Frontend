@@ -1,4 +1,4 @@
-const workspaceReducer = (state ={ workspaces: [], selected_workspace: null, target: null, target_data: [] }, action) => {
+const workspaceReducer = (state ={ workspaces: [], selected_workspace: null, target: null, workspace_chatrooms: [] }, action) => {
     switch(action.type){
         case 'GET_WORKSPACES':
             return{
@@ -13,17 +13,22 @@ const workspaceReducer = (state ={ workspaces: [], selected_workspace: null, tar
         case 'GET_SELECTED':
             return{
                 ...state,
-                selected: action.workspace
+                selected_workspace: action.workspace
             }
         case 'SELECT_TARGET':
             return{
                 ...state,
                 target: action.target
             }
-        case 'GET_DATA':
+        case 'SET_CHATROOMS':
             return{
                 ...state,
-                target_data: action.data
+                workspace_chatrooms: action.workspace_chatrooms
+            }
+        case 'ADD_CHATROOM':
+            return{
+                ...state,
+                workspace_chatrooms: [...state.workspace_chatrooms, action.chatroom]
             }
         default:
             return state

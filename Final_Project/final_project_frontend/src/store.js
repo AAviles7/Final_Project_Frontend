@@ -1,12 +1,12 @@
 import { createStore, combineReducers } from 'redux';
 
 import workspaceReducer from './reducers/workspaceReducer'
-import channelReducer from './reducers/channelReducer'
+import chatroomReducer from './reducers/chatroomReducer'
 import userReducer from './reducers/userReducer';
 
 const rootReducer = combineReducers({
     workspace: workspaceReducer,
-    channel: channelReducer,
+    chatroom: chatroomReducer,
     user: userReducer
 })
 
