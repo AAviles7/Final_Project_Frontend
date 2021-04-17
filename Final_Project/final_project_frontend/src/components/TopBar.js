@@ -1,9 +1,9 @@
 import { Fragment, useState } from 'react'
 import { connect } from 'react-redux'
-import { Icon, Search, Dropdown, Image, Popup } from 'semantic-ui-react'
+import { Icon, Search, Dropdown, Image, Popup, Button, Divider } from 'semantic-ui-react'
 import Hedwig from '../images/Hedwig.png'
 
-const TopBar = ({ user, all_users, all_chatrooms }) => {
+const TopBar = ({ user, all_users, all_chatrooms, history }) => {
     const [searchedUsers, setSearchUsers] = useState('')
     const [searchedChatrooms, setSearchChatrooms] = useState('')
     const [searchBy, setSearchBy] = useState('User')
@@ -34,12 +34,23 @@ const TopBar = ({ user, all_users, all_chatrooms }) => {
             </Dropdown>
             <Search id='topsearch' size='large' onSearchChange={(event) => searchBy==='User' ? setSearchUsers(event.target.value) : setSearchChatrooms(event.target.value)} results={results} placeholder={`${searchBy}`}/>
             <Popup 
-                content={`${user.display_name}`}
                 on='click'
                 pinned
                 position='bottom right'
                 trigger={<Icon name='user' size='big' id='profileicon' />}
-            />
+            >
+                <Popup.Content>
+                    <Popup.Header as='h1'>{user.display_name}</Popup.Header>
+                    <Popup.Header as='h4'>E-mail: {user.email}</Popup.Header>
+                    <Popup.Header as='h4'>Phone# {user.phone_number}</Popup.Header>
+                    <Popup.Header as='h4'>Bio: {user.bio}</Popup.Header>
+                    <Button fluid>Edit Profile</Button>
+                    <Divider />
+                    <Button fluid onClick={() => history.push('/select_workspace')}>Return to Workspace Menu</Button>
+                    <Divider hidden />
+                    <Button fluid onClick={() => history.push('/logout')}>Logout</Button>
+                </Popup.Content>
+            </Popup>
         </Fragment>
     )
 }

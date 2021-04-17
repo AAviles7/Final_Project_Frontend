@@ -1,38 +1,34 @@
-import { Header } from "semantic-ui-react"
+import { Grid, Header, Feed } from "semantic-ui-react"
 import { connect } from 'react-redux'
-import { Fragment } from "react"
+import { useEffect, useState } from "react"
 import MessageForm from '../components/MessageForm'
 import { ActionCableConsumer } from 'react-actioncable-provider'
+import FeedItem from './FeedItem'
 
 
-const WorkspaceMain = ({ chatroom, messages, add_message}) => {
+const WorkspaceMain = ({ chatroom, chatroom_messages }) => {
     return(
-        <Fragment>
-            {chatroom !== null ? <ActionCableConsumer 
-                    key = {chatroom.id}
-                    channel = {{ channel: 'ChatroomMessages', chatroom: chatroom.id}}
-                    onReceived = {add_message}
-                >
-                {chatroom!==null ? <Header as='h1' key={chatroom.id}>{chatroom.name}</Header> : <Header as='h1'>Chat</Header>}
-                {messages!==null ? messages.map((message) => <Header as='h4' key={message.id} >{message.body}</Header>) : null}
-                </ActionCableConsumer>
-            : null}
-            <MessageForm />
-        </Fragment>
+        <Grid id='workspacemain'>
+            <Grid.Row>
+                <Header>{chatroom.name}</Header>
+            </Grid.Row>
+            <Grid.Row>
+                <Feed>
+                    {chatroom_messages.map((message) => <FeedItem message={message} key={message.id} />)}
+                </Feed>
+            </Grid.Row>
+            <Grid.Row >
+                <MessageForm />
+            </Grid.Row>            
+        </Grid>
     )
 }
 
 const mapStateToProps = (state) => {
     return {
         chatroom: state.chatroom.chatroom,
-        messages: state.chatroom.chatroom_messages
+        chatroom_messages: state.chatroom.chatroom_messages
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        add_message: (message) => dispatch({ type: 'ADD_MESSAGE', message})
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(WorkspaceMain)
+export default connect(mapStateToProps)(WorkspaceMain)

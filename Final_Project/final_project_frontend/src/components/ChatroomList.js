@@ -1,21 +1,18 @@
 import { List } from "semantic-ui-react"
 import { connect } from 'react-redux'
-import React, { Fragment } from 'react';
 
 const ChatroomList = ({ chatroom, select, select_chatroom, get_chat }) => {
     return(
-        <Fragment>
-            <List.Item onClick={() => {
-                select(chatroom);
-                select_chatroom(chatroom);
-                get_chat(chatroom)
-            }}>
-                <List.Icon name='hashtag' />
-                <List.Content>
-                    <List.Header as='a'>{chatroom.name}</List.Header>
-                </List.Content>
-            </List.Item>
-        </Fragment>
+        <List.Item id='listitem' onClick={() => {
+            select(chatroom);
+            select_chatroom(chatroom);
+            get_chat(chatroom)
+        }}>
+            <List.Icon name='hashtag' />
+            <List.Content>
+                <List.Header as='h4'  id='chatroomlistitem'>{chatroom.name}</List.Header>
+            </List.Content>
+        </List.Item>
     )
 }
 

@@ -19,8 +19,6 @@ const MessageForm = ({ chatroom, user, send_message}) => {
             body: JSON.stringify(newMsg)
         }
         const res = await fetch(API_CHATROOM_MESSAGES, rqObj)
-        const message = await res.json()
-        send_message(message)
     }
     
 
@@ -35,7 +33,7 @@ const MessageForm = ({ chatroom, user, send_message}) => {
 
 const mapStateToProps = (state) => {
     return {
-        chatroom: state.workspace.target,
+        chatroom: state.chatroom.chatroom,
         user: state.user.user.user
     }
 }
