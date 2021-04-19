@@ -47,7 +47,7 @@ body {
 }
 
 #topbarlogo {
-    margin-top: 3px;
+    margin-top: 2px;
     margin-left: 40px;
     width: 170px;
     height: 5vh;
@@ -57,7 +57,13 @@ body {
     margin-left: 10px;
 }
 
-#chatroomheader:hover, #userheader:hover, #dmheader:hover, #listitem:hover {
+#chatroomheader:hover, #userheader:hover, #dmheader:hover {
+    cursor: pointer;
+    color: rgb(255, 0, 0);
+    background-color: rgb(235, 235, 235);
+}
+
+#listitem:hover {
     cursor: pointer;
     background-color: rgb(235, 235, 235);
 }
@@ -74,9 +80,9 @@ body {
     color: dimgray;
 }
 
-#userlistitem:hover, #dmlistitem:hover, #chatroomlistitem:hover {
+#userlistitem:hover, #dmlistitem:hover, #chatroomlistitem:hover{
     cursor: pointer;
-    color: rgb(0, 0, 0);
+    color: rgb(255, 0, 0);
 }
 
 #feeditemname {
@@ -86,4 +92,26 @@ body {
 #feeditemname:hover {
     cursor: pointer;
     color: rgb(0, 0, 0);
+}
+
+#channeljoin, #createchannel{
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+#channeljoin:hover , #createchannel:hover {
+    color: rgb(255, 0, 0);
+    background-color: rgb(235, 235, 235);
+}
+
+#joinlist {
+    cursor: pointer;
+}
+
+#threedots {
+    color: white;
+}
+
+#joinlist:hover, #threedots:hover {
+    color: rgb(255, 0, 0);
 }

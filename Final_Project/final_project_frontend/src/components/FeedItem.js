@@ -1,19 +1,53 @@
 import { useEffect, useState } from "react"
 import { Feed, Icon } from "semantic-ui-react"
-import { API_USERS } from '../constants'
+import { API_USERS, API_MESSAGE_LIKES } from '../constants'
+import { connect } from 'react-redux'
 
-const FeedItem = ({ message }) => {
-    const [user, setUser] = useState('')
+const FeedItem = ({ message, logged_user }) => {
+    const [userAuthored, setUser] = useState(message.user.display_name)
+    const [currentUserLike, setCurrentUserLike] = useState(false)
+    const [likes, setLikes] = useState(message.chatmessage_likes.length)
+    const [userLike, setUserLike] = useState(null)
 
     useEffect(() => {
-        const getUsers = async () => {
-            const res = await fetch(API_USERS)
-            const allUsers = await res.json()
-            const foundUser = allUsers.find((user) => user.id === message.user_id)
-            setUser(foundUser)
+        const foundLike = message.chatmessage_likes.map((like) => like.user_id === logged_user.id)
+        setCurrentUserLike(foundLike.includes(true))
+        if(foundLike.includes(true)){
+            const likeData = message.chatmessage_likes.filter((like) => like.user_id === logged_user.id)
+            setUserLike(likeData[0])
         }
-        getUsers()
-    }, [])
+    }, [message])
+
+    const like = async () => {
+        if(!currentUserLike){
+            const newLike = {
+                user_id: logged_user.id,
+                chatroom_message_id: message.id
+            }
+
+            const reObj = {
+                headers: {"Content-Type": "application/json"},
+                method: "POST",
+                body: JSON.stringify(newLike)
+            }
+
+            const res = await fetch(API_MESSAGE_LIKES, reObj)
+            const newLikeData = await res.json()
+            setUserLike(newLikeData)
+            setLikes(likes+1)
+            setCurrentUserLike(true)
+        }else if(currentUserLike){
+            const reObj = {
+                headers: {"Content-Type": "application/json"},
+                method: "DELETE"
+            }
+
+            await fetch(API_MESSAGE_LIKES+userLike.id, reObj)
+            setLikes(likes-1)
+            setCurrentUserLike(false)
+            setUserLike(null)
+        }
+    }
 
     return(
         <Feed.Event id='feeditem'>
@@ -22,16 +56,16 @@ const FeedItem = ({ message }) => {
             </Feed.Label>
             <Feed.Content>
                 <Feed.Summary>
-                    <Feed.User id='feeditemname'>{user.display_name}</Feed.User>
+                    <Feed.User id='feeditemname'>{userAuthored}</Feed.User>
                     <Feed.Date>{message.created_at}</Feed.Date>
                 </Feed.Summary>
                 <Feed.Extra text>
                     {message.body}
                 </Feed.Extra>
                 <Feed.Meta>
-                    <Feed.Like>
-                        <Icon name='fire'/>
-                        {message.likes}
+                    <Feed.Like onClick={() => like()}>
+                        <Icon name='fire' color={currentUserLike ? 'red' : null}/>
+                        {likes}
                     </Feed.Like>
                 </Feed.Meta>
             </Feed.Content>
@@ -39,4 +73,10 @@ const FeedItem = ({ message }) => {
     )
 }
 
-export default FeedItem
+const mapStateToProps = (state) => {
+    return {
+        logged_user: state.user.user.user
+    }
+}
+
+export default connect(mapStateToProps)(FeedItem)

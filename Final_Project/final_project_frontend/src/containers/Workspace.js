@@ -1,17 +1,20 @@
-import { Divider, Grid, Header, List, Icon } from "semantic-ui-react"
+import { Divider, Grid, Header, List, Icon, Popup } from "semantic-ui-react"
 import { connect } from 'react-redux'
 import ChatroomList from '../components/ChatroomList'
 import UserList from '../components/UserList'
 import WorkspaceMain from '../components/WorkspaceMain'
 import React, { useEffect, useState } from 'react'
 import TopBar from '../components/TopBar'
-import { API_CHATROOMS } from '../constants'
+import { API_CHATROOMS, API_CHATROOM_MEMBERS } from '../constants'
 import DirectMessageList from '../components/DirectMessageList'
+import NewChannelForm from '../components/NewChannelForm'
 
-const Workspace = ({ workspace, set_chatrooms, workspace_chatrooms, add_chatroom, target_chatroom, select_chatroom, set_messages, users, history, user }) => {
+const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom, set_messages, users, history, user }) => {
     const [showChatrooms, setShowRooms ] = useState(true)
     const [showUsers, setShowUsers ] = useState(true)
     const [showDms, setShowDms ] = useState(true)
+    const [userChatrooms, setUserChatrooms] = useState([])
+    const [nonUserChatrooms, setNoneChatrooms] = useState([])
 
     const conversations = []
     user.sent_conversations.map((conv) => conversations.push(conv))
@@ -22,12 +25,36 @@ const Workspace = ({ workspace, set_chatrooms, workspace_chatrooms, add_chatroom
             const res = await fetch(API_CHATROOMS)
             const chatroomsAllData = await res.json()
             const chatroomsData = chatroomsAllData.filter((chatroom) => chatroom.workspace_id === workspace.id)
+            const userChatrooms = chatroomsData.filter((chatroom) => chatroom.users.find((chatUser) => chatUser.id === user.id))
+            const nonUserRooms = chatroomsData.filter((chatroom) => !chatroom.users.find((chatUser) => chatUser.id === user.id))
+            setNoneChatrooms(nonUserRooms)
+            setUserChatrooms(userChatrooms)
             set_chatrooms(chatroomsData)
             select_chatroom(chatroomsData[0])
             set_messages(chatroomsData[0])
         }
         fetchData()
-    }, [workspace])
+    }, [])
+
+    const joinChatroom = async (chatroom) => {
+        const newChatroomMember = {
+            user_id: user.id,
+            chatroom_id: chatroom.id
+        }
+        const reqObj = {
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newChatroomMember)
+        }
+
+        await fetch(API_CHATROOM_MEMBERS, reqObj)
+        setUserChatrooms([...userChatrooms, chatroom])
+        setNoneChatrooms(nonUserChatrooms.filter((chatroom) => chatroom.users.find((chatUser) => chatUser.id === user.id)))
+    }
+
+    const leaveChatroom = async (chatroom) => {
+        
+    }
 
     let left = 2
     let center = 12
@@ -53,9 +80,33 @@ const Workspace = ({ workspace, set_chatrooms, workspace_chatrooms, add_chatroom
                             Channels
                         </Header>
                         {showChatrooms ? <List relaxed animated id='chatroomlist'>
-                            {workspace_chatrooms.length ? workspace_chatrooms.map((chatroom) => <ChatroomList chatroom={chatroom} key={chatroom.id}/>) : null}
+                            {userChatrooms.length ? userChatrooms.map((chatroom) => <ChatroomList chatroom={chatroom} key={chatroom.id} leaveChatroom={leaveChatroom} />) : null}
                         </List> : null}
 
+                        {/* Join Channel */}
+                        <Popup on='click' position='right center' trigger={
+                            <Header as='h4' id='channeljoin'>
+                                + Join Channel
+                            </Header>
+                        }>
+                            <Popup.Content>
+                                {nonUserChatrooms.length ? <List>
+                                    {nonUserChatrooms.map((chatroom) => <List.Item as='h4' id='joinlist' onClick={() => joinChatroom(chatroom)}>{chatroom.name}</List.Item>)}
+                                </List> : 'No Channels to Join'}
+                            </Popup.Content>
+                        </Popup>
+
+                        {/* Create New Channel */}
+                        <Popup on='click' position='right center' trigger={
+                            <Header as='h4' id='createchannel'>
+                                + Create New Channel
+                            </Header>
+                        }>
+                            <Popup.Content>
+                                <NewChannelForm />
+                            </Popup.Content>
+                        </Popup>
+                        
                         <Divider />
 
                         {/* Direct Message List */}
@@ -96,7 +147,6 @@ const Workspace = ({ workspace, set_chatrooms, workspace_chatrooms, add_chatroom
 const mapStateToProps = (state) => {
     return {
         users: state.workspace.selected_workspace.users,
-        workspace_chatrooms: state.workspace.workspace_chatrooms,
         target_chatroom: state.chatroom.chatroom,
         user: state.user.user.user
     }
@@ -105,7 +155,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         set_chatrooms: (workspace_chatrooms) => dispatch({ type: 'SET_CHATROOMS', workspace_chatrooms}),
-        add_chatroom: (chatroom) => dispatch({ type: 'ADD_CHATROOM', chatroom}),
         add_message: (message) => dispatch({ type: 'ADD_MESSAGE', message}),
         select_chatroom: (chatroom) => dispatch({ type: 'SELECT_CHATROOM', chatroom}),
         set_messages: (chatroom) => dispatch({ type: 'GET_MESSAGES', chatroom})

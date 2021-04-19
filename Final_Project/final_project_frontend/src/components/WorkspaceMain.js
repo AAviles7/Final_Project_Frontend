@@ -1,12 +1,24 @@
 import { Grid, Header, Feed } from "semantic-ui-react"
 import { connect } from 'react-redux'
-import { useEffect, useState } from "react"
 import MessageForm from '../components/MessageForm'
-import { ActionCableConsumer } from 'react-actioncable-provider'
 import FeedItem from './FeedItem'
+import { useEffect, useState } from "react"
+import { API_CHATROOM_MESSAGES } from '../constants'
 
 
-const WorkspaceMain = ({ chatroom, chatroom_messages }) => {
+const WorkspaceMain = ({ chatroom }) => {
+    const [messages, setMessages] = useState([])
+
+    useEffect(() => {
+        const fetchMessages = async () => {
+            const res = await fetch(API_CHATROOM_MESSAGES)
+            const allChatroom_Messages = await res.json()
+            const chatroom_messages = allChatroom_Messages.filter((chat_messages) => chat_messages.chatroom_id === chatroom.id)
+            setMessages(chatroom_messages)
+        }
+        fetchMessages()
+    }, [chatroom])
+
     return(
         <Grid id='workspacemain'>
             <Grid.Row>
@@ -14,7 +26,7 @@ const WorkspaceMain = ({ chatroom, chatroom_messages }) => {
             </Grid.Row>
             <Grid.Row>
                 <Feed>
-                    {chatroom_messages.map((message) => <FeedItem message={message} key={message.id} />)}
+                    {messages.map((message) => <FeedItem message={message} key={message.id} />)}
                 </Feed>
             </Grid.Row>
             <Grid.Row >
@@ -26,8 +38,7 @@ const WorkspaceMain = ({ chatroom, chatroom_messages }) => {
 
 const mapStateToProps = (state) => {
     return {
-        chatroom: state.chatroom.chatroom,
-        chatroom_messages: state.chatroom.chatroom_messages
+        chatroom: state.chatroom.chatroom
     }
 }
 

@@ -6,12 +6,13 @@ export const HEADERS = {
 };
 
 
-export const API_WORKSPACES = `${API_ROOT}/workspaces`
-export const API_USERS = `${API_ROOT}/users`
-export const API_CHATROOMS = `${API_ROOT}/chatrooms`
-export const API_CHATROOM_MESSAGES = `${API_ROOT}/chatroom_messages`
-export const API_CHATROOM_MEMBERS = `${API_ROOT}/chatroom_members`
-export const API_CONVERSTATIONS = `${API_ROOT}/conversations`
-export const API_DIRECT_MESSAGES = `${API_ROOT}/direct_messages`
+export const API_WORKSPACES = `${API_ROOT}/workspaces/`
+export const API_USERS = `${API_ROOT}/users/`
+export const API_CHATROOMS = `${API_ROOT}/chatrooms/`
+export const API_CHATROOM_MESSAGES = `${API_ROOT}/chatroom_messages/`
+export const API_MESSAGE_LIKES = `${API_ROOT}/chatmessage_likes/`
+export const API_CHATROOM_MEMBERS = `${API_ROOT}/chatroom_members/`
+export const API_CONVERSTATIONS = `${API_ROOT}/conversations/`
+export const API_DIRECT_MESSAGES = `${API_ROOT}/direct_messages/`
 
 export const API_LOGIN = `${API_ROOT}/login`
