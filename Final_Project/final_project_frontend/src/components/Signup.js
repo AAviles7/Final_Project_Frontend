@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Form } from 'semantic-ui-react'
+import { Form, Header } from 'semantic-ui-react'
+import { API_USERS } from '../constants'
 
 class Signup extends Component {
 
@@ -41,7 +42,7 @@ class Signup extends Component {
             body: JSON.stringify({ user: newUser }),
         }
 
-        fetch('http://127.0.0.1:4000/users', reqObj)
+        fetch(API_USERS, reqObj)
             .then((res) => res.json())
             .then(() => {
                 this.resetStates();
@@ -55,6 +56,7 @@ class Signup extends Component {
     render(){
         return(
             <Form onSubmit={(event) => this.handleSubmit(event)}>
+                <Header>Create New Account</Header>
                 <Form.Group widths='equal'>
                     <Form.Input fluid label='Username' placeholder='Username' onChange={(event) => this.setState({ username: event.target.value })} />
                     <Form.Input fluid label='Password' placeholder='Password' onChange={(event) => this.setState({ password: event.target.value })} />
@@ -67,7 +69,7 @@ class Signup extends Component {
                 </Form.Group>
 
                 <Form.TextArea label='Bio' placeholder='Tell us more about you... (Can be editted later)' onChange={(event) => this.setState({ bio: event.target.value })} />
-                <Form.Button type='submit'>Submit</Form.Button>
+                <Form.Button type='submit'>Create Account</Form.Button>
             </Form>
         )
     }

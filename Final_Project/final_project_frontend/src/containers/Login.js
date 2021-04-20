@@ -107,7 +107,7 @@ state = {
                 <TransitionablePortal
                     onClose={this.closeSignup}
                     open={this.state.signup}>
-                    <Segment>
+                    <Segment style={{ left: '24%', position: 'fixed', top: '40%', zIndex: 1000, width: '1000px'}}>
                         <Signup close={this.closeSignup} />
                     </Segment>
                 </TransitionablePortal>
