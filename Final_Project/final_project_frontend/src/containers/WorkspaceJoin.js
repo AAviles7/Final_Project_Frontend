@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 import { API_WORKSPACE_MEMBERS } from '../constants'
 
 
-const WorkspaceJoin = ({ workspace, history, workspace_user, set_workspace_user }) => {
+const WorkspaceJoin = ({ workspace, history, workspace_user, set_workspace_user, user }) => {
     const [join_code, setCode] = useState('')
-    const [remember, setRemember] = useState(workspace_user.remember)
+    const [remember, setRemember] = useState(false)
 
     const updateRemeber = async () => {
         const updatedMember = {
@@ -22,11 +22,30 @@ const WorkspaceJoin = ({ workspace, history, workspace_user, set_workspace_user 
         set_workspace_user(newData)
     }
 
+    const joinWorkspace = async () => {
+        const newMember = {
+            workspace_id: workspace.id,
+            user_id: user.id,
+            remember: remember
+        }
+        const reObj = {
+            headers: { "Content-Type": "application/json" },
+            method: 'POST',
+            body: JSON.stringify(newMember)
+        }
+        const res = await fetch(API_WORKSPACE_MEMBERS, reObj)
+        const newMemberData = await res.json()
+        set_workspace_user(newMemberData)
+    }
+
     const handleClick = () => {
         if(workspace.join_code !== join_code){
             alert('Invalid Join Code')
         }else{
-            if(remember){
+            if(workspace_user===null){
+                joinWorkspace()
+            }
+            if(remember && workspace_user!==null){
                 updateRemeber()
             }
             history.push(`/workspace/${workspace.name}`)
@@ -47,7 +66,8 @@ const WorkspaceJoin = ({ workspace, history, workspace_user, set_workspace_user 
 const mapStateToProps = (state) => {
     return {
         workspace: state.workspace.selected_workspace,
-        workspace_user: state.workspace.selected_workspace_user
+        workspace_user: state.workspace.selected_workspace_user,
+        user: state.user.user.user
     }
 }
 

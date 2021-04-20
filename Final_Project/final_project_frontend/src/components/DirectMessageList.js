@@ -16,7 +16,7 @@ const DirectMessageList = ({ conversation, user, users }) => {
         <List.Item id='listitem'>
             <List.Icon name='hashtag'/>
             <List.Content>
-                <List.Header as='h4' id='dmlistitem'>{ targetUser.display_name }</List.Header>
+                <List.Header as='h4' id='dmlistitem'>{ targetUser === '' ? targetUser.display_name : null }</List.Header>
             </List.Content>
         </List.Item>
     )

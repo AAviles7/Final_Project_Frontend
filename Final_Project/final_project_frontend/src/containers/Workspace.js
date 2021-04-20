@@ -15,10 +15,7 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
     const [showDms, setShowDms ] = useState(true)
     const [userChatrooms, setUserChatrooms] = useState([])
     const [nonUserChatrooms, setNoneChatrooms] = useState([])
-
-    const conversations = []
-    user.sent_conversations.map((conv) => conversations.push(conv))
-    user.received_conversations.map((conv) => conversations.push(conv))
+    const [conversations, setConversations] = useState([])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,6 +24,11 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
             const chatroomsData = chatroomsAllData.filter((chatroom) => chatroom.workspace_id === workspace.id)
             const userChatrooms = chatroomsData.filter((chatroom) => chatroom.users.find((chatUser) => chatUser.id === user.id))
             const nonUserRooms = chatroomsData.filter((chatroom) => !chatroom.users.find((chatUser) => chatUser.id === user.id))
+
+            const conversations_unfiltered = []
+            user.sent_conversations.map((conv) => conversations_unfiltered.push(conv))
+            user.received_conversations.map((conv) => conversations_unfiltered.push(conv))
+
             setNoneChatrooms(nonUserRooms)
             setUserChatrooms(userChatrooms)
             set_chatrooms(chatroomsData)
@@ -34,7 +36,7 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
             set_messages(chatroomsData[0])
         }
         fetchData()
-    }, [])
+    }, [workspace])
 
     const joinChatroom = async (chatroom) => {
         const newChatroomMember = {
@@ -114,9 +116,9 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
                             <Icon name={showDms ? 'caret down' : 'caret right'}/>
                             Direct messages
                         </Header>
-                        {showDms ? <List relaxed id='dmlist'>
+                        {/* {showDms ? <List relaxed id='dmlist'>
                             {conversations.length ? conversations.map((conversation) => <DirectMessageList conversation={conversation} key={conversation.id} />) : null}
-                        </List> : null}
+                        </List> : null} */}
 
                     </Grid.Column>
 

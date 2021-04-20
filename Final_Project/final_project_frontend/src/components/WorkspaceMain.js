@@ -4,9 +4,10 @@ import MessageForm from '../components/MessageForm'
 import FeedItem from './FeedItem'
 import { useEffect, useState } from "react"
 import { API_CHATROOM_MESSAGES } from '../constants'
+import { ActionCableConsumer } from 'react-actioncable-provider'
 
 
-const WorkspaceMain = ({ chatroom }) => {
+const WorkspaceMain = ({ chatroom, send_message }) => {
     const [messages, setMessages] = useState([])
 
     useEffect(() => {
@@ -25,9 +26,16 @@ const WorkspaceMain = ({ chatroom }) => {
                 <Header>{chatroom.name}</Header>
             </Grid.Row>
             <Grid.Row>
+
+                {/* <ActionCableConsumer
+                    channel = 'ChatroomMessagesChannel'
+                    onReceived = {send_message}
+                > */}
                 <Feed>
                     {messages.map((message) => <FeedItem message={message} key={message.id} />)}
                 </Feed>
+                {/* </ActionCableConsumer> */}
+
             </Grid.Row>
             <Grid.Row >
                 <MessageForm />
@@ -42,4 +50,10 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(WorkspaceMain)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        send_message: (message) => dispatch({ type: 'ADD_MESSAGE', message})
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(WorkspaceMain)

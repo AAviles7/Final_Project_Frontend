@@ -42,7 +42,7 @@ state = {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user: newUser }),
         };
-    
+        
         fetch(API_LOGIN, reqObj)
           .then((res) => {
             const jsonPromise = res.json();

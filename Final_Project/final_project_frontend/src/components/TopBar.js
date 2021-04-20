@@ -65,7 +65,7 @@ const TopBar = ({ user, all_users, all_chatrooms, history }) => {
                     <Divider hidden />
                     <LeaveWorkspacePortal history={history} setOpen={setOpen}/>
                     <Divider hidden />
-                    <Button fluid onClick={() => history.push('/logout')}>Logout</Button>
+                    <Button negative fluid onClick={() => history.push('/logout')}>Logout</Button>
                 </Popup.Content>
             </Popup>
         </Fragment>
