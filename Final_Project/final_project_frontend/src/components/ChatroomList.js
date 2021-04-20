@@ -12,7 +12,7 @@ const ChatroomList = ({ chatroom, select, select_chatroom, get_chat, leaveChatro
                     get_chat(chatroom)
                 }}>{chatroom.name}</List.Header>
             </List.Content>
-            <Popup on='hover' trigger={<List.Icon name='times' id='threedots' onClick={() => leaveChatroom(chatroom)}/>}>
+            <Popup on='hover' basic trigger={<List.Icon name='times' id='threedots' onClick={() => leaveChatroom(chatroom)}/>}>
                 <Popup.Content>
                     <Popup.Header>Leave Chatroom</Popup.Header>
                 </Popup.Content>

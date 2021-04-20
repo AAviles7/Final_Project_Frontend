@@ -7,6 +7,7 @@ export const HEADERS = {
 
 
 export const API_WORKSPACES = `${API_ROOT}/workspaces/`
+export const API_WORKSPACE_MEMBERS = `${API_ROOT}/workspace_members/`
 export const API_USERS = `${API_ROOT}/users/`
 export const API_CHATROOMS = `${API_ROOT}/chatrooms/`
 export const API_CHATROOM_MESSAGES = `${API_ROOT}/chatroom_messages/`

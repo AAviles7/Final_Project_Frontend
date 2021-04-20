@@ -19,6 +19,7 @@ const WorkspaceMenu = ({ add_workspace, history }) => {
     )
 }
 
+
 const mapStateToProps = (state) => {
     return {
         workspaces: state.workspace.workspaces

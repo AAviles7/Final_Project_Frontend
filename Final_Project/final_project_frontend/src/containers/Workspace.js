@@ -79,7 +79,7 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
                             <Icon name={showChatrooms ? 'caret down' : 'caret right'}/>
                             Channels
                         </Header>
-                        {showChatrooms ? <List relaxed animated id='chatroomlist'>
+                        {showChatrooms ? <List relaxed id='chatroomlist'>
                             {userChatrooms.length ? userChatrooms.map((chatroom) => <ChatroomList chatroom={chatroom} key={chatroom.id} leaveChatroom={leaveChatroom} />) : null}
                         </List> : null}
 
@@ -114,7 +114,7 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
                             <Icon name={showDms ? 'caret down' : 'caret right'}/>
                             Direct messages
                         </Header>
-                        {showDms ? <List relaxed animated id='dmlist'>
+                        {showDms ? <List relaxed id='dmlist'>
                             {conversations.length ? conversations.map((conversation) => <DirectMessageList conversation={conversation} key={conversation.id} />) : null}
                         </List> : null}
 
@@ -133,8 +133,8 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
                             <Icon name={showUsers ? 'caret down' : 'caret right'}/>
                             All users
                         </Header>
-                        {showUsers ? <List relaxed animated id='userlist'>
-                            {users.length ? users.map((user) => <UserList user={user} key={user.id}/>) : null}
+                        {showUsers ? <List relaxed id='userlist'>
+                            {users.map((user) => <UserList user={user} key={user.id}/>)}
                         </List> : null}
 
                     </Grid.Column>

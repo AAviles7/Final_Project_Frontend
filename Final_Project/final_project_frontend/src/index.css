@@ -80,7 +80,7 @@ body {
     color: dimgray;
 }
 
-#userlistitem:hover, #dmlistitem:hover, #chatroomlistitem:hover{
+#userlistitem:hover, #dmlistitem:hover, #chatroomlistitem:hover, #popupclose:hover{
     cursor: pointer;
     color: rgb(255, 0, 0);
 }
@@ -114,4 +114,9 @@ body {
 
 #joinlist:hover, #threedots:hover {
     color: rgb(255, 0, 0);
+}
+
+#editprofileportal {
+    height: auto;
+    width: 800px;
 }

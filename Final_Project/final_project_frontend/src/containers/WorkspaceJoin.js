@@ -1,15 +1,34 @@
 import { useState } from "react"
-import { Container, Header, Input, Button } from "semantic-ui-react"
+import { Container, Header, Input, Button, Checkbox } from "semantic-ui-react"
 import { connect } from 'react-redux'
+import { API_WORKSPACE_MEMBERS } from '../constants'
 
 
-const WorkspaceJoin = ({ workspace, history }) => {
+const WorkspaceJoin = ({ workspace, history, workspace_user, set_workspace_user }) => {
     const [join_code, setCode] = useState('')
+    const [remember, setRemember] = useState(workspace_user.remember)
+
+    const updateRemeber = async () => {
+        const updatedMember = {
+            remember: remember
+        }
+        const reqObj = {
+            headers: { "Content-Type": "application/json" },
+            method: 'PATCH',
+            body: JSON.stringify(updatedMember)
+        }
+        const res = await fetch(API_WORKSPACE_MEMBERS+workspace_user.id, reqObj)
+        const newData = await res.json()
+        set_workspace_user(newData)
+    }
 
     const handleClick = () => {
         if(workspace.join_code !== join_code){
             alert('Invalid Join Code')
         }else{
+            if(remember){
+                updateRemeber()
+            }
             history.push(`/workspace/${workspace.name}`)
         }
     }
@@ -20,14 +39,22 @@ const WorkspaceJoin = ({ workspace, history }) => {
             <Input placeholder='Please Enter Join code' onChange={(event) => setCode(event.target.value)}/>
             <Button onClick={handleClick}>Join Work Space</Button>
             <Button onClick={() => history.goBack()}>Go Back</Button>
+            <Checkbox  label='Remember me' onChange={() => setRemember(!remember)} />
         </Container>
     )
 }
 
 const mapStateToProps = (state) => {
     return {
-        workspace: state.workspace.selected_workspace
+        workspace: state.workspace.selected_workspace,
+        workspace_user: state.workspace.selected_workspace_user
     }
-  }
+}
 
-export default connect(mapStateToProps)(WorkspaceJoin)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        set_workspace_user: (user) => dispatch({ type: 'SET_WORKSPACE_USER', user})
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(WorkspaceJoin)

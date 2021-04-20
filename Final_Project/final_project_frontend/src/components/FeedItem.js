@@ -4,7 +4,6 @@ import { API_USERS, API_MESSAGE_LIKES } from '../constants'
 import { connect } from 'react-redux'
 
 const FeedItem = ({ message, logged_user }) => {
-    const [userAuthored, setUser] = useState(message.user.display_name)
     const [currentUserLike, setCurrentUserLike] = useState(false)
     const [likes, setLikes] = useState(message.chatmessage_likes.length)
     const [userLike, setUserLike] = useState(null)
@@ -56,7 +55,7 @@ const FeedItem = ({ message, logged_user }) => {
             </Feed.Label>
             <Feed.Content>
                 <Feed.Summary>
-                    <Feed.User id='feeditemname'>{userAuthored}</Feed.User>
+                    <Feed.User id='feeditemname'>{message.user.display_name}</Feed.User>
                     <Feed.Date>{message.created_at}</Feed.Date>
                 </Feed.Summary>
                 <Feed.Extra text>
