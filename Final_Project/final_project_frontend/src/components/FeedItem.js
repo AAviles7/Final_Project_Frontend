@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Feed, Icon } from "semantic-ui-react"
-import { API_USERS, API_MESSAGE_LIKES } from '../constants'
+import { API_MESSAGE_LIKES } from '../constants'
 import { connect } from 'react-redux'
 
 const FeedItem = ({ message, logged_user }) => {
@@ -49,33 +49,40 @@ const FeedItem = ({ message, logged_user }) => {
     }
 
     return(
-        <Feed.Event id='feeditem'>
-            <Feed.Label>
-                <Icon name='user' />
-            </Feed.Label>
-            <Feed.Content>
-                <Feed.Summary>
-                    <Feed.User id='feeditemname'>{message.user.display_name}</Feed.User>
-                    <Feed.Date>{message.created_at}</Feed.Date>
-                </Feed.Summary>
-                <Feed.Extra text>
-                    {message.body}
-                </Feed.Extra>
-                <Feed.Meta>
-                    <Feed.Like onClick={() => like()}>
-                        <Icon name='fire' color={currentUserLike ? 'red' : null}/>
-                        {likes}
-                    </Feed.Like>
-                </Feed.Meta>
-            </Feed.Content>
-        </Feed.Event>
+            <Feed.Event id='feeditem'>
+                <Feed.Label>
+                    <Icon name='user' />
+                </Feed.Label>
+                <Feed.Content>
+                    <Feed.Summary>
+                        <Feed.User id='feeditemname'>{message.user.display_name}</Feed.User>
+                        <Feed.Date>{message.created_at}</Feed.Date>
+                    </Feed.Summary>
+                    <Feed.Extra text>
+                        {message.body}
+                    </Feed.Extra>
+                    <Feed.Meta>
+                        <Feed.Like onClick={() => like()}>
+                            <Icon name='fire' color={currentUserLike ? 'red' : null}/>
+                            {likes}
+                        </Feed.Like>
+                    </Feed.Meta>
+                </Feed.Content>
+            </Feed.Event>
     )
 }
 
 const mapStateToProps = (state) => {
     return {
-        logged_user: state.user.user.user
+        logged_user: state.user.user.user,
+        chatroom: state.chatroom.chatroom
     }
 }
 
-export default connect(mapStateToProps)(FeedItem)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        send_message: (message) => dispatch({ type: 'ADD_MESSAGE', message})
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FeedItem)

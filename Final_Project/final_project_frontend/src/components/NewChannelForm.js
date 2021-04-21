@@ -1,10 +1,10 @@
 import { Button, Form, Input } from "semantic-ui-react"
 import { connect } from 'react-redux'
 import { useState } from "react"
-import { API_CHATROOMS } from '../constants'
+import { API_CHATROOMS, API_CHATROOM_MEMBERS } from '../constants'
 
 
-const NewChannelForm = ({ workspace, add_chatroom }) => {
+const NewChannelForm = ({ workspace, add_chatroom, setUserChatrooms, user, userChatrooms }) => {
     const [name, setName] = useState('')
 
     const handleSubmit = async (event) => {
@@ -24,7 +24,21 @@ const NewChannelForm = ({ workspace, add_chatroom }) => {
 
             const res = await fetch(API_CHATROOMS, reqObj)
             const newChatroom = await res.json()
+
+            const newChannelMember = {
+                user_id: user.id,
+                chatroom_id: newChatroom.id
+            }
+            const reObj = {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newChannelMember)
+            }
+            const r = await fetch(API_CHATROOM_MEMBERS, reObj)
+            const newChatroomMember = await r.json()
+
             add_chatroom(newChatroom)
+            setUserChatrooms([...userChatrooms, newChatroom])
 
             event.target.reset()
         }
@@ -40,7 +54,8 @@ const NewChannelForm = ({ workspace, add_chatroom }) => {
 
 const mapStateToProps = (state) => {
     return {
-        workspace: state.workspace.selected_workspace
+        workspace: state.workspace.selected_workspace,
+        user: state.user.user.user
     }
 }
 

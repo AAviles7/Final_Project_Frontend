@@ -7,7 +7,7 @@ import { API_CHATROOM_MESSAGES } from '../constants'
 import { ActionCableConsumer } from 'react-actioncable-provider'
 
 
-const WorkspaceMain = ({ chatroom, send_message }) => {
+const WorkspaceMain = ({ chatroom, send_message, chatroom_messages, add_chatroom }) => {
     const [messages, setMessages] = useState([])
 
     useEffect(() => {
@@ -18,23 +18,25 @@ const WorkspaceMain = ({ chatroom, send_message }) => {
             setMessages(chatroom_messages)
         }
         fetchMessages()
-    }, [chatroom])
+    }, [chatroom, chatroom_messages])
 
+    const onReceived = (data) => {
+        send_message(data['chatroom_message'])
+    }
+    
     return(
         <Grid id='workspacemain'>
+            <ActionCableConsumer
+                channel = {{channel: 'ChatroomMessagesChannel', chatroom_id: chatroom.id}}
+                onReceived = {onReceived}
+            />
             <Grid.Row>
                 <Header>{chatroom.name}</Header>
             </Grid.Row>
             <Grid.Row>
-
-                {/* <ActionCableConsumer
-                    channel = 'ChatroomMessagesChannel'
-                    onReceived = {send_message}
-                > */}
-                <Feed>
-                    {messages.map((message) => <FeedItem message={message} key={message.id} />)}
-                </Feed>
-                {/* </ActionCableConsumer> */}
+                    <Feed>
+                        {messages.map((message) => <FeedItem message={message} key={message.id} />)}
+                    </Feed>
 
             </Grid.Row>
             <Grid.Row >
@@ -46,13 +48,15 @@ const WorkspaceMain = ({ chatroom, send_message }) => {
 
 const mapStateToProps = (state) => {
     return {
-        chatroom: state.chatroom.chatroom
+        chatroom: state.chatroom.chatroom,
+        chatroom_messages: state.chatroom.chatroom_messages
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        send_message: (message) => dispatch({ type: 'ADD_MESSAGE', message})
+        send_message: (message) => dispatch({ type: 'ADD_MESSAGE', message}),
+        add_chatroom: (chatroom) => dispatch({ type: 'ADD_CHATROOM', chatroom})
     }
 }
 

@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { Container, Header, Input, Button, Checkbox } from "semantic-ui-react"
 import { connect } from 'react-redux'
-import { API_WORKSPACE_MEMBERS } from '../constants'
+import { API_WORKSPACE_MEMBERS, API_WORKSPACES } from '../constants'
 
 
-const WorkspaceJoin = ({ workspace, history, workspace_user, set_workspace_user, user }) => {
+const WorkspaceJoin = ({ workspace, history, workspace_user, set_workspace_user, user, update_selected_workspace, update_workspaces }) => {
     const [join_code, setCode] = useState('')
     const [remember, setRemember] = useState(false)
 
@@ -35,6 +35,13 @@ const WorkspaceJoin = ({ workspace, history, workspace_user, set_workspace_user,
         }
         const res = await fetch(API_WORKSPACE_MEMBERS, reObj)
         const newMemberData = await res.json()
+
+        const r = await fetch(API_WORKSPACES)
+        const workspaceData = await r.json()
+        update_workspaces(workspaceData)
+        const selectedWorkspace = workspaceData.find((work) => work.id === workspace.id)
+        update_selected_workspace(selectedWorkspace)
+
         set_workspace_user(newMemberData)
     }
 
@@ -73,7 +80,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        set_workspace_user: (user) => dispatch({ type: 'SET_WORKSPACE_USER', user})
+        set_workspace_user: (user) => dispatch({ type: 'SET_WORKSPACE_USER', user}),
+        update_selected_workspace: (workspace) => dispatch({ type: 'GET_SELECTED', workspace}),
+        update_workspaces: (workspaces) => dispatch({ type: 'GET_WORKSPACES', workspaces})
     }
 }
 

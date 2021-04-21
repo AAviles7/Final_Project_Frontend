@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
 import { Divider, Form, Header } from "semantic-ui-react"
-import { API_WORKSPACES, API_CHATROOMS } from '../constants'
+import { API_WORKSPACES, API_CHATROOMS, API_WORKSPACE_MEMBERS } from '../constants'
 
 class WorkspaceForm extends Component {
 
@@ -33,9 +34,7 @@ class WorkspaceForm extends Component {
 
         fetch(API_WORKSPACES, reqObj)
             .then((res) => res.json())
-            .then((workspace) => {
-                this.props.add(workspace);
-                
+            .then((workspace) => {                
                 const newChatroom = {
                     name: this.state.chatroom_name,
                     workspace_id: workspace.id
@@ -46,7 +45,8 @@ class WorkspaceForm extends Component {
                     body: JSON.stringify(newChatroom),
                 }
                 fetch(API_CHATROOMS, rObj)
-
+                this.props.set_recent(workspace)
+                this.props.add(workspace);
                 this.resetStates()
             })
         
@@ -69,8 +69,8 @@ class WorkspaceForm extends Component {
                     </Form.Field>
                     <Divider />
                     <Form.Field onChange={(event) => this.setState({ chatroom_name: event.target.value })}>
-                        <label>Name of First Chatroom</label>
-                        <input placeholder='Enter Name for the first Chatroom' />
+                        <label>Name of First Channel</label>
+                        <input placeholder='Enter Name for the first Channel' />
                     </Form.Field>
                     <Form.Button type='submit'>Submit</Form.Button>
                 </Form>
@@ -79,4 +79,16 @@ class WorkspaceForm extends Component {
     }
 }
 
-export default WorkspaceForm
+const mapStateToProps = (state) => {
+    return{
+        user: state.user.user.user
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        set_recent: (workspace) => dispatch({ type: 'SET_RECENT', workspace })
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(WorkspaceForm)

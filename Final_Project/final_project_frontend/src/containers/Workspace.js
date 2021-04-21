@@ -9,7 +9,7 @@ import { API_CHATROOMS, API_CHATROOM_MEMBERS } from '../constants'
 import DirectMessageList from '../components/DirectMessageList'
 import NewChannelForm from '../components/NewChannelForm'
 
-const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom, set_messages, users, history, user }) => {
+const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom, set_messages, users, history, user, workspace_chatrooms, add_chatroom }) => {
     const [showChatrooms, setShowRooms ] = useState(true)
     const [showUsers, setShowUsers ] = useState(true)
     const [showDms, setShowDms ] = useState(true)
@@ -28,6 +28,8 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
             const conversations_unfiltered = []
             user.sent_conversations.map((conv) => conversations_unfiltered.push(conv))
             user.received_conversations.map((conv) => conversations_unfiltered.push(conv))
+            const conversations_filtered = conversations_unfiltered.filter((conv) => conv.workspace_id === workspace.id)
+            setConversations(conversations_filtered)
 
             setNoneChatrooms(nonUserRooms)
             setUserChatrooms(userChatrooms)
@@ -37,6 +39,7 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
         }
         fetchData()
     }, [workspace])
+
 
     const joinChatroom = async (chatroom) => {
         const newChatroomMember = {
@@ -51,11 +54,18 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
 
         await fetch(API_CHATROOM_MEMBERS, reqObj)
         setUserChatrooms([...userChatrooms, chatroom])
-        setNoneChatrooms(nonUserChatrooms.filter((chatroom) => chatroom.users.find((chatUser) => chatUser.id === user.id)))
+        setNoneChatrooms(nonUserChatrooms.filter((c) => c.id !== chatroom.id))
     }
 
     const leaveChatroom = async (chatroom) => {
-        
+        const reObj = {
+            headers: {"Content-Type": "application/json"},
+            method: "DELETE"
+        }
+        const chatroomUser = chatroom.chatroom_members.find((member) => member.user_id === user.id)
+        await fetch(API_CHATROOM_MEMBERS+chatroomUser.id, reObj)
+        setUserChatrooms(userChatrooms.filter((c) => c.id !== chatroom.id))
+        setNoneChatrooms([...nonUserChatrooms, chatroom])
     }
 
     let left = 2
@@ -105,7 +115,7 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
                             </Header>
                         }>
                             <Popup.Content>
-                                <NewChannelForm />
+                                <NewChannelForm setUserChatrooms={setUserChatrooms} userChatrooms={userChatrooms}/>
                             </Popup.Content>
                         </Popup>
                         
@@ -116,9 +126,9 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
                             <Icon name={showDms ? 'caret down' : 'caret right'}/>
                             Direct messages
                         </Header>
-                        {/* {showDms ? <List relaxed id='dmlist'>
-                            {conversations.length ? conversations.map((conversation) => <DirectMessageList conversation={conversation} key={conversation.id} />) : null}
-                        </List> : null} */}
+                        {showDms ? <List relaxed id='dmlist'>
+                            {conversations.length > 0 ? conversations.map((conversation) => <DirectMessageList conversation={conversation} key={conversation.id} />) : null}
+                        </List> : null}
 
                     </Grid.Column>
 
@@ -150,7 +160,8 @@ const mapStateToProps = (state) => {
     return {
         users: state.workspace.selected_workspace.users,
         target_chatroom: state.chatroom.chatroom,
-        user: state.user.user.user
+        user: state.user.user.user,
+        workspace_chatrooms: state.workspace.workspace_chatrooms
     }
 }
 
@@ -159,7 +170,8 @@ const mapDispatchToProps = (dispatch) => {
         set_chatrooms: (workspace_chatrooms) => dispatch({ type: 'SET_CHATROOMS', workspace_chatrooms}),
         add_message: (message) => dispatch({ type: 'ADD_MESSAGE', message}),
         select_chatroom: (chatroom) => dispatch({ type: 'SELECT_CHATROOM', chatroom}),
-        set_messages: (chatroom) => dispatch({ type: 'GET_MESSAGES', chatroom})
+        set_messages: (chatroom) => dispatch({ type: 'GET_MESSAGES', chatroom}),
+        add_chatroom: (chatroom) => dispatch({ type: 'ADD_CHATROOM', chatroom})
     }
 }
 

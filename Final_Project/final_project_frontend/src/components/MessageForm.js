@@ -19,6 +19,8 @@ const MessageForm = ({ chatroom, user, send_message}) => {
             body: JSON.stringify(newMsg)
         }
         await fetch(API_CHATROOM_MESSAGES, rqObj)
+        // const messageData = await res.json()
+        // send_message(messageData)
     }
     
 

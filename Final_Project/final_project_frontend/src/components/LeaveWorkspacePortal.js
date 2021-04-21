@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import { Button, Header, Portal, Segment } from 'semantic-ui-react'
-import { API_WORKSPACE_MEMBERS } from '../constants'
+import { API_WORKSPACE_MEMBERS, API_WORKSPACES } from '../constants'
 
-const LeaveWorkspacePortal = ({ history, workspace_user, set_workspace_user, setOpen }) => {
+const LeaveWorkspacePortal = ({ history, workspace_user, set_workspace_user, setOpen, workspace, set_workspaces, set_selected_workspace }) => {
 
     const leaveWorkspace = async () => {
         const reObj = {
@@ -11,6 +11,11 @@ const LeaveWorkspacePortal = ({ history, workspace_user, set_workspace_user, set
         }
         await fetch(API_WORKSPACE_MEMBERS+workspace_user.id, reObj)
         set_workspace_user(null)
+        const res = await fetch(API_WORKSPACES)
+        const workspacesData = await res.json()
+        set_workspaces(workspacesData)
+        const selectedWorkspace = workspacesData.find((work) => work.id === workspace.id)
+        set_selected_workspace(selectedWorkspace)
         history.push('/select_workspace')
     }
 
@@ -30,13 +35,16 @@ const LeaveWorkspacePortal = ({ history, workspace_user, set_workspace_user, set
 
 const mapStateToProps = (state) => {
     return {
-        workspace_user: state.workspace.selected_workspace_user
+        workspace_user: state.workspace.selected_workspace_user,
+        workspace: state.workspace.selected_workspace
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        set_workspace_user: (user) => dispatch({ type: 'SET_WORKSPACE_USER', user})
+        set_workspace_user: (user) => dispatch({ type: 'SET_WORKSPACE_USER', user}),
+        set_workspaces: (workspaces) => dispatch({ type: 'GET_WORKSPACES', workspaces}),
+        set_selected_workspace: (workspace) => dispatch({ type: 'GET_SELECTED', workspace})
     }
 }
 

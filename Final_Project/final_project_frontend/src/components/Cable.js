@@ -9,8 +9,8 @@ const Cable = ({ workspace_chatrooms, add_message}) => {
                 return (
                     <ActionCableConsumer 
                         key = {chatroom.id}
-                        channel = {{ channel: 'ChatroomMessages', chatroom: chatroom.id}}
-                        onReceived = {add_message}
+                        channel = {{ channel: 'ChatroomMessagesChannel', chatroom: chatroom.id}}
+                        onReceived = {(data) => console.log('ChatroomMessagesChannel data: ', data)}
                     />
                 )
             })}

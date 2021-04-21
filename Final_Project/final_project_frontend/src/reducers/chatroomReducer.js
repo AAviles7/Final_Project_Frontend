@@ -10,6 +10,11 @@ const chatroomReducer = ( state = {  chatroom: null , chatroom_messages: [] }, a
                 ...state,
                 chatroom_messages: action.chatroom.chatroom_messages
             }
+        case 'SET_MESSAGES':
+            return{
+                ...state,
+                chatroom_messages: action.chatroom_messages
+            }
         case 'ADD_MESSAGE':
             return{
                 ...state,

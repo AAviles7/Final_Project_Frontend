@@ -68,7 +68,7 @@ class Signup extends Component {
                     <Form.Input fluid label='Phone Number' placeholder='Phone Number' onChange={(event) => this.setState({ number: event.target.value })} />
                 </Form.Group>
 
-                <Form.TextArea label='Bio' placeholder='Tell us more about you... (Can be editted later)' onChange={(event) => this.setState({ bio: event.target.value })} />
+                <Form.TextArea label='Bio' placeholder='Tell us more about you... ' onChange={(event) => this.setState({ bio: event.target.value })} />
                 <Form.Button type='submit'>Create Account</Form.Button>
             </Form>
         )

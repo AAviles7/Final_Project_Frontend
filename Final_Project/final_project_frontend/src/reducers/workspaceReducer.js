@@ -1,4 +1,4 @@
-const workspaceReducer = (state ={ workspaces: [], selected_workspace: null, target: null, workspace_chatrooms: [], selected_workspace_user: null }, action) => {
+const workspaceReducer = (state ={ workspaces: [], selected_workspace: null, target: null, workspace_chatrooms: [], selected_workspace_user: null, recently_added_workspace: null }, action) => {
     switch(action.type){
         case 'GET_WORKSPACES':
             return{
@@ -34,6 +34,11 @@ const workspaceReducer = (state ={ workspaces: [], selected_workspace: null, tar
             return{
                 ...state,
                 workspace_chatrooms: [...state.workspace_chatrooms, action.chatroom]
+            }
+        case 'SET_RECENT':
+            return{
+                ...state,
+                recently_added_workspace: action.workspace
             }
         default:
             return state

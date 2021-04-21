@@ -59,7 +59,7 @@ const TopBar = ({ user, all_users, all_chatrooms, history }) => {
                     <Popup.Header as='h4'>E-mail: {user.email}</Popup.Header>
                     <Popup.Header as='h4'>Phone# {user.phone_number}</Popup.Header>
                     <Popup.Header as='h4'>Bio: {user.bio}</Popup.Header>
-                    <EditProfilePortal setOpen={setOpen}/>
+                    {/* <EditProfilePortal setOpen={setOpen}/> */}
                     <Divider />
                     <Button fluid onClick={() => history.push('/select_workspace')}>Sign-in to another Workspace</Button>
                     <Divider hidden />

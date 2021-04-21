@@ -1,10 +1,10 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import WorkspaceList from './WorkspaceList'
 import { List } from "semantic-ui-react"
 import { Search } from 'semantic-ui-react'
 
-const WorkspaceMenulist = ({ history, workspaces }) => {
+const WorkspaceMenulist = ({ history, workspaces, set_workspaces }) => {
     const [searchFilter, setSearchFilter] = useState('')
     const filteredWorkspaces = workspaces.filter((workspace) => (workspace.name).toLowerCase().includes(searchFilter.toLowerCase()))
 
