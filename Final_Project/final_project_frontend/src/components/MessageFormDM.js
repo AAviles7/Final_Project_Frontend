@@ -1,24 +1,24 @@
 import { useState } from "react"
 import { Button, Form, TextArea } from "semantic-ui-react"
 import { connect } from 'react-redux'
-import { API_CHATROOM_MESSAGES } from '../constants'
+import { API_DIRECT_MESSAGES } from '../constants'
 
-const MessageForm = ({ chatroom, user }) => {
+const MessageFormDM = ({ user, conversation }) => {
     const [body, setBody] = useState('')
 
 
     const SendMessage = async () => {
         const newMsg = {
-            user_id: user.id,
-            chatroom_id: chatroom.id,
-            body: body
+            body: body,
+            conversation_id: conversation.id,
+            user_id: user.id
         }
         const rqObj ={
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newMsg)
         }
-        await fetch(API_CHATROOM_MESSAGES, rqObj)
+        await fetch(API_DIRECT_MESSAGES, rqObj)
     }
     
 
@@ -33,9 +33,9 @@ const MessageForm = ({ chatroom, user }) => {
 
 const mapStateToProps = (state) => {
     return {
-        chatroom: state.chatroom.chatroom,
-        user: state.user.user.user
+        user: state.user.user.user,
+        conversation: state.user.target_conversation
     }
 }
 
-export default connect(mapStateToProps)(MessageForm)
+export default connect(mapStateToProps)(MessageFormDM)

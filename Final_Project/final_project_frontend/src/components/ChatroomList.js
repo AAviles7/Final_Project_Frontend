@@ -26,7 +26,7 @@ const ChatroomList = ({ chatroom, select, select_chatroom, get_chat, leaveChatro
                 <List.Icon name='hashtag' />
                 <List.Content>
                     <List.Header as='h4'  id='chatroomlistitem' onClick={() => {
-                        select(chat);
+                        select('chatroom');
                         select_chatroom(chat);
                         get_chat(chat)
                     }}>{chat.name}</List.Header>

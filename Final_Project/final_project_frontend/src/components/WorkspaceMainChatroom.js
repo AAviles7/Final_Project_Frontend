@@ -1,13 +1,13 @@
 import { Grid, Header, Feed } from "semantic-ui-react"
 import { connect } from 'react-redux'
-import MessageForm from '../components/MessageForm'
+import MessageForm from './MessageForm'
 import FeedItem from './FeedItem'
 import { useEffect, useState } from "react"
 import { API_CHATROOM_MESSAGES } from '../constants'
 import { ActionCableConsumer } from 'react-actioncable-provider'
 
 
-const WorkspaceMain = ({ chatroom, send_message, chatroom_messages, add_chatroom }) => {
+const WorkspaceMainChatroom = ({ chatroom, send_message, chatroom_messages }) => {
     const [messages, setMessages] = useState([])
 
     useEffect(() => {
@@ -34,10 +34,9 @@ const WorkspaceMain = ({ chatroom, send_message, chatroom_messages, add_chatroom
                 <Header>{chatroom.name}</Header>
             </Grid.Row>
             <Grid.Row>
-                    <Feed>
-                        {messages.map((message) => <FeedItem message={message} key={message.id} />)}
-                    </Feed>
-
+                <Feed>
+                    {messages.map((message) => <FeedItem message={message} key={message.id} />)}
+                </Feed>
             </Grid.Row>
             <Grid.Row >
                 <MessageForm />
@@ -55,9 +54,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        send_message: (message) => dispatch({ type: 'ADD_MESSAGE', message}),
-        add_chatroom: (chatroom) => dispatch({ type: 'ADD_CHATROOM', chatroom})
+        send_message: (message) => dispatch({ type: 'ADD_MESSAGE', message})
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WorkspaceMain)
+export default connect(mapStateToProps, mapDispatchToProps)(WorkspaceMainChatroom)

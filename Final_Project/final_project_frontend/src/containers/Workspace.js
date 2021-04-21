@@ -2,14 +2,16 @@ import { Divider, Grid, Header, List, Icon, Popup } from "semantic-ui-react"
 import { connect } from 'react-redux'
 import ChatroomList from '../components/ChatroomList'
 import UserList from '../components/UserList'
-import WorkspaceMain from '../components/WorkspaceMain'
+import WorkspaceMainChatroom from '../components/WorkspaceMainChatroom'
+import WorkspaceMainDM from '../components/WorkspaceMainDM'
 import React, { useEffect, useState } from 'react'
 import TopBar from '../components/TopBar'
-import { API_CHATROOMS, API_CHATROOM_MEMBERS } from '../constants'
+import { API_CHATROOMS, API_CHATROOM_MEMBERS, API_CONVERSTATIONS } from '../constants'
 import DirectMessageList from '../components/DirectMessageList'
 import NewChannelForm from '../components/NewChannelForm'
+import { ActionCableConsumer } from 'react-actioncable-provider'
 
-const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom, set_messages, users, history, user, workspace_chatrooms, add_chatroom }) => {
+const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom, set_messages, users, history, user, workspace_chatrooms, add_chatroom, set_conversations, set_target_conversations }) => {
     const [showChatrooms, setShowRooms ] = useState(true)
     const [showUsers, setShowUsers ] = useState(true)
     const [showDms, setShowDms ] = useState(true)
@@ -29,8 +31,14 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
             user.sent_conversations.map((conv) => conversations_unfiltered.push(conv))
             user.received_conversations.map((conv) => conversations_unfiltered.push(conv))
             const conversations_filtered = conversations_unfiltered.filter((conv) => conv.workspace_id === workspace.id)
-            setConversations(conversations_filtered)
 
+            const r = await fetch(API_CONVERSTATIONS)
+            const convData = await r.json()
+            const userConversations = convData.filter((conv) =>  conversations_filtered.filter((c) => c.id === conv.id))
+
+            set_target_conversations(userConversations[0])
+            setConversations(userConversations)
+            set_conversations(userConversations)
             setNoneChatrooms(nonUserRooms)
             setUserChatrooms(userChatrooms)
             set_chatrooms(chatroomsData)
@@ -134,7 +142,9 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
 
                     {/* Workspace Main */}
                     <Grid.Column id='workspaceMain' width={center}>
-                        {target_chatroom !== null ? <WorkspaceMain /> : null}
+                        {target_chatroom !== null ? <WorkspaceMainDM /> : null}
+                        {/* {target_chatroom !== null ? <WorkspaceMainChatroom /> : null} */}
+                        {/* {target_conversation !== null ? <WorkspaceMainDM /> : null}  */}
                     </Grid.Column>
 
                     {/* Workspace Right */}
@@ -160,8 +170,10 @@ const mapStateToProps = (state) => {
     return {
         users: state.workspace.selected_workspace.users,
         target_chatroom: state.chatroom.chatroom,
+        target_conversation: state.user.target_conversation,
         user: state.user.user.user,
-        workspace_chatrooms: state.workspace.workspace_chatrooms
+        workspace_chatrooms: state.workspace.workspace_chatrooms,
+        target: state.workspace.target
     }
 }
 
@@ -171,6 +183,8 @@ const mapDispatchToProps = (dispatch) => {
         add_message: (message) => dispatch({ type: 'ADD_MESSAGE', message}),
         select_chatroom: (chatroom) => dispatch({ type: 'SELECT_CHATROOM', chatroom}),
         set_messages: (chatroom) => dispatch({ type: 'GET_MESSAGES', chatroom}),
+        set_conversations: (conversations) => dispatch({ type: 'SET_CONVERSATIONS', conversations}),
+        set_target_conversations: (conversation) => dispatch({ type: 'SET_TARGET_CONVERSATION', conversation}),
         add_chatroom: (chatroom) => dispatch({ type: 'ADD_CHATROOM', chatroom})
     }
 }

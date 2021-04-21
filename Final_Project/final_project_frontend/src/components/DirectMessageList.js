@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import Workspace from "../containers/Workspace"
 import { useEffect, useState } from "react"
 
-const DirectMessageList = ({ conversation, user, users }) => {
+const DirectMessageList = ({ conversation, user, users, select }) => {
     const [targetUser, setTargetUser] = useState('')
 
     useEffect(() => {
@@ -29,4 +29,10 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(DirectMessageList)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        select: (user) => dispatch({ type: 'SET_TARGET_USER', user})
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DirectMessageList)
