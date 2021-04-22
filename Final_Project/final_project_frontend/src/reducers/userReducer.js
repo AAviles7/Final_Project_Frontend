@@ -5,6 +5,11 @@ const userReducer = (state = { user: null, target_conversation: null, direct_mes
                 ...state,
                 user: action.user
             }
+        case 'UPDATE_USER':
+            return{
+                ...state,
+                user: action.user
+            }
         case 'LOGOUT_USER':
             return{
                 ...state,

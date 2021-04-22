@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Portal, Button, Segment, Form } from 'semantic-ui-react'
 import { API_USERS } from '../constants'
 
-const EditProfilePortal = ({ user, update_user, setOpen }) => {
+const EditProfilePortal = ({ user, update_user, setOpen, jwt_code }) => {
     const [username, setUsername] = useState(user.username)
     const [email, setEmail] = useState(user.email)
     const [display_name, setDisplayName] = useState(user.display_name)
@@ -43,7 +43,13 @@ const EditProfilePortal = ({ user, update_user, setOpen }) => {
             }
             const res = await fetch(API_USERS+user.id, reqObj)
             const updatedData = await res.json()
-            update_user(updatedData)
+
+            const formatedData = {
+                user: updatedData,
+                jwt: jwt_code
+            }
+
+            update_user(formatedData)
             setOpen(false)
             event.target.reset()
         }
@@ -73,13 +79,14 @@ const EditProfilePortal = ({ user, update_user, setOpen }) => {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.user.user.user
+        user: state.user.user.user,
+        jwt_code: state.user.user.jwt
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        update_user: (user) => dispatch({ type: 'GET_USER', user})
+        update_user: (user) => dispatch({ type: 'UPDATE_USER', user})
     }
 }
 

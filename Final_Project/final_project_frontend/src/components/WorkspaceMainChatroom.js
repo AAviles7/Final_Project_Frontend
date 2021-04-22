@@ -1,14 +1,19 @@
-import { Grid, Header, Feed } from "semantic-ui-react"
+import { Grid, Header, Feed, Divider } from "semantic-ui-react"
 import { connect } from 'react-redux'
 import MessageForm from './MessageForm'
 import FeedItem from './FeedItem'
-import { useEffect, useState } from "react"
+import { Fragment, useEffect, useState, useRef } from "react"
 import { API_CHATROOM_MESSAGES } from '../constants'
 import ChatroomCable from './ChatroomCable'
 
 
 const WorkspaceMainChatroom = ({ chatroom, send_message, chatroom_messages }) => {
     const [messages, setMessages] = useState([])
+    const messagesEndRef = useRef(null)
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
 
     useEffect(() => {
         const fetchMessages = async () => {
@@ -18,6 +23,7 @@ const WorkspaceMainChatroom = ({ chatroom, send_message, chatroom_messages }) =>
             setMessages(chatroom_messages)
         }
         fetchMessages()
+        scrollToBottom()
     }, [chatroom, chatroom_messages])
 
     const onReceived = (data) => {
@@ -27,15 +33,16 @@ const WorkspaceMainChatroom = ({ chatroom, send_message, chatroom_messages }) =>
     return(
         <Grid id='workspacemain'>
             <ChatroomCable onReceived={onReceived}/>
-            <Grid.Row>
+            <Grid.Row id='workspacemaintop'>
                 <Header>{chatroom.name}</Header>
             </Grid.Row>
-            <Grid.Row>
-                <Feed>
+            <Grid.Row id='workspacemainfeed'>
+                <Feed if='mainfeed'>
                     {messages.map((message) => <FeedItem message={message} key={message.id} />)}
                 </Feed>
+                <div ref={messagesEndRef} />
             </Grid.Row>
-            <Grid.Row >
+            <Grid.Row id='workspacemainbot'>
                 <MessageForm />
             </Grid.Row>            
         </Grid>

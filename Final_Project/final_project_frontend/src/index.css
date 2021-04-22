@@ -120,3 +120,34 @@ body {
     height: auto;
     width: 800px;
 }
+
+/* Main Workspace */
+
+#workspacemaintop {
+    position: fixed;
+    top: 55px;
+}
+
+#workspacemainfeed {
+    display: flex;
+    flex-direction: column-reverse;
+    max-height: 61vh;
+    margin-top: 45px;
+    max-width: 1420px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+#mainfeed, #feeditem {
+    width: 1405px;
+}
+
+#workspacemainbot {
+    position: absolute;
+    bottom: 0px;
+}
+
+#messagebox {
+    width: 1405px;
+    resize: none;
+}

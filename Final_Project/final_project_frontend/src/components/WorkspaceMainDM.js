@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Header, Feed } from 'semantic-ui-react'
 import MessageFormDM from '../components/MessageFormDM'
@@ -9,6 +9,11 @@ import DirectCable from './DirectCable'
 const WorkspaceMainDM = ({ conversation, sender, receiver, user, send_message, direct_messages }) => {
     const [target_user, setTarget] = useState(sender)
     const [messages, setMessages] = useState([])
+    const messagesEndRef = useRef(null)
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
 
     useEffect(() => {
         setTarget(user.id === sender.id? receiver : sender)
@@ -19,6 +24,7 @@ const WorkspaceMainDM = ({ conversation, sender, receiver, user, send_message, d
             setMessages(convMessages)
         }
         fetchMessages()
+        scrollToBottom()
     }, [conversation, direct_messages])
 
     const onReceived = (data) =>{
@@ -28,15 +34,16 @@ const WorkspaceMainDM = ({ conversation, sender, receiver, user, send_message, d
     return(
         <Grid id='workspacemain'>
             <DirectCable onReceived={onReceived}/>
-            <Grid.Row>
+            <Grid.Row id='workspacemaintop'>
                 <Header>{target_user.display_name}</Header>
             </Grid.Row>
-            <Grid.Row>
+            <Grid.Row id='workspacemainfeed'>
                 <Feed>
                     {messages.map((message) => <FeedItemDM message={message} key={message.id} />)}
                 </Feed>
+                <div ref={messagesEndRef} />
             </Grid.Row>
-            <Grid.Row>
+            <Grid.Row id='workspacemainbot'>
                 <MessageFormDM />
             </Grid.Row>
 

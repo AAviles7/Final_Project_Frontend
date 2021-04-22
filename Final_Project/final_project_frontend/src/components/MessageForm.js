@@ -19,13 +19,20 @@ const MessageForm = ({ chatroom, user }) => {
             body: JSON.stringify(newMsg)
         }
         fetch(API_CHATROOM_MESSAGES, rqObj)
+        setBody('')
     }
-    
+
+    const handleKeyPress = (e) => {
+        if(e.key==='Enter' && e.shiftKey===false){
+            e.preventDefault()
+            SendMessage(body)
+        }
+    }    
 
     return(
         <Form>
-            <TextArea onChange={(event) => setBody(event.target.value)} placeholder='Enter new message... '/>
-            <Button onClick={() => SendMessage(body)}>Send</Button>
+            <TextArea value={body} id='messagebox' onChange={(event) => setBody(event.target.value)} onKeyPress={(e) => handleKeyPress(e)} placeholder='Enter new message... '/>
+            <Button fluid onClick={() => SendMessage(body)}>Send</Button>
         </Form>
     )
     

@@ -174,7 +174,7 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
                             All users
                         </Header>
                         {showUsers ? <List relaxed id='userlist'>
-                            {users.map((user) => <UserList user={user} key={user.id}/>)}
+                            {users.map((user) => <UserList user={user} key={user.id} setConversations={setConversations} conversations={conversations}/>)}
                         </List> : null}
 
                     </Grid.Column>
