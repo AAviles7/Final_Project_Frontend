@@ -7,7 +7,7 @@ const MessageFormDM = ({ user, conversation }) => {
     const [body, setBody] = useState('')
 
 
-    const SendMessage = async () => {
+    const SendMessage = () => {
         const newMsg = {
             body: body,
             conversation_id: conversation.id,
@@ -18,7 +18,7 @@ const MessageFormDM = ({ user, conversation }) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newMsg)
         }
-        await fetch(API_DIRECT_MESSAGES, rqObj)
+        fetch(API_DIRECT_MESSAGES, rqObj)
     }
     
 

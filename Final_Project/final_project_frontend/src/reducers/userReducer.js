@@ -18,7 +18,7 @@ const userReducer = (state = { user: null, target_conversation: null, direct_mes
         case 'GET_DMS':
             return{
                 ...state,
-                direct_messages: action.messages
+                direct_messages: action.conversation.direct_messages
             }
         case 'SET_CONVERSATIONS':
             return{

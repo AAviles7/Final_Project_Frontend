@@ -34,11 +34,10 @@ const NewChannelForm = ({ workspace, add_chatroom, setUserChatrooms, user, userC
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newChannelMember)
             }
-            const r = await fetch(API_CHATROOM_MEMBERS, reObj)
-            const newChatroomMember = await r.json()
+            await fetch(API_CHATROOM_MEMBERS, reObj)
 
-            add_chatroom(newChatroom)
             setUserChatrooms([...userChatrooms, newChatroom])
+            add_chatroom(newChatroom)
 
             event.target.reset()
         }

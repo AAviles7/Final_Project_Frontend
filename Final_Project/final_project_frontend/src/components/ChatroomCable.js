@@ -2,15 +2,15 @@ import { Fragment } from 'react'
 import { ActionCableConsumer } from 'react-actioncable-provider'
 import { connect } from 'react-redux'
 
-const Cable = ({ workspace_chatrooms, add_message}) => {
+const ChatroomCable = ({ workspace_chatrooms, onReceived}) => {
     return(
         <Fragment>
             {workspace_chatrooms.map((chatroom) => {
                 return (
                     <ActionCableConsumer 
                         key = {chatroom.id}
-                        channel = {{ channel: 'ChatroomMessagesChannel', chatroom: chatroom.id}}
-                        onReceived = {(data) => console.log('ChatroomMessagesChannel data: ', data)}
+                        channel = {{channel: 'ChatroomMessagesChannel', chatroom_id: chatroom.id}}
+                        onReceived = {onReceived}
                     />
                 )
             })}
@@ -24,10 +24,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        add_message: (message) => dispatch({ type: 'ADD_MESSAGE', message})
-    }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(Cable)
+export default connect(mapStateToProps)(ChatroomCable)

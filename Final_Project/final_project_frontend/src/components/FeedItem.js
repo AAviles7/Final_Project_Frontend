@@ -74,15 +74,8 @@ const FeedItem = ({ message, logged_user }) => {
 
 const mapStateToProps = (state) => {
     return {
-        logged_user: state.user.user.user,
-        chatroom: state.chatroom.chatroom
+        logged_user: state.user.user.user
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        send_message: (message) => dispatch({ type: 'ADD_MESSAGE', message})
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(FeedItem)
+export default connect(mapStateToProps)(FeedItem)

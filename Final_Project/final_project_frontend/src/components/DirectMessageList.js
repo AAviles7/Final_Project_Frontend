@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import Workspace from "../containers/Workspace"
 import { useEffect, useState } from "react"
 
-const DirectMessageList = ({ conversation, user, users, select }) => {
+const DirectMessageList = ({ conversation, user, users, select, select_conversation, get_dms }) => {
     const [targetUser, setTargetUser] = useState('')
 
     useEffect(() => {
@@ -16,7 +16,11 @@ const DirectMessageList = ({ conversation, user, users, select }) => {
         <List.Item id='listitem'>
             <List.Icon name='hashtag'/>
             <List.Content>
-                <List.Header as='h4' id='dmlistitem'>{ targetUser !== '' ? targetUser.display_name : null }</List.Header>
+                <List.Header as='h4' id='dmlistitem' onClick={() => {
+                    select('user');
+                    select_conversation(conversation);
+                    get_dms(conversation)
+                }}>{ targetUser !== '' ? targetUser.display_name : null }</List.Header>
             </List.Content>
         </List.Item>
     )
@@ -31,7 +35,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        select: (user) => dispatch({ type: 'SET_TARGET_USER', user})
+        select_conversation: (conversation) => dispatch({ type: 'SET_TARGET_CONVERSATION', conversation}),
+        select: (target) => dispatch({ type: 'SELECT_TARGET', target}),
+        get_dms: (conversation) => dispatch({ type: 'GET_DMS', conversation})
     }
 }
 

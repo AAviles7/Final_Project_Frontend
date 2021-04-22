@@ -18,26 +18,21 @@ const ChatroomList = ({ chatroom, select, select_chatroom, get_chat, leaveChatro
     }, [chatroom])
 
     return(
-        // <ActionCableConsumer
-        //     channel = {{channel: 'ChatroomsChannel', chatroom_id: chatroom.id}}
-        //     onReceived = {(data) => console.log('data: ', data)}
-        // >
-            <List.Item id='listitem' >
-                <List.Icon name='hashtag' />
-                <List.Content>
-                    <List.Header as='h4'  id='chatroomlistitem' onClick={() => {
-                        select('chatroom');
-                        select_chatroom(chat);
-                        get_chat(chat)
-                    }}>{chat.name}</List.Header>
-                </List.Content>
-                <Popup on='hover' basic trigger={<List.Icon name='times' id='threedots' onClick={() => leaveChatroom(chat)}/>}>
-                    <Popup.Content>
-                        <Popup.Header>Leave Chatroom</Popup.Header>
-                    </Popup.Content>
-                </Popup>
-            </List.Item>
-        // </ActionCableConsumer>
+        <List.Item id='listitem' >
+            <List.Icon name='hashtag' />
+            <List.Content>
+                <List.Header as='h4'  id='chatroomlistitem' onClick={() => {
+                    select('chatroom');
+                    select_chatroom(chat);
+                    get_chat(chat)
+                }}>{chat.name}</List.Header>
+            </List.Content>
+            <Popup on='hover' basic trigger={<List.Icon name='times' id='threedots' onClick={() => leaveChatroom(chat)}/>}>
+                <Popup.Content>
+                    <Popup.Header>Leave Chatroom</Popup.Header>
+                </Popup.Content>
+            </Popup>
+        </List.Item>
     )
 }
 

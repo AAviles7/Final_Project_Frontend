@@ -9,9 +9,8 @@ import TopBar from '../components/TopBar'
 import { API_CHATROOMS, API_CHATROOM_MEMBERS, API_CONVERSTATIONS } from '../constants'
 import DirectMessageList from '../components/DirectMessageList'
 import NewChannelForm from '../components/NewChannelForm'
-import { ActionCableConsumer } from 'react-actioncable-provider'
 
-const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom, set_messages, users, history, user, workspace_chatrooms, add_chatroom, set_conversations, set_target_conversations }) => {
+const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom, set_messages, users, history, user, add_chatroom, set_conversations, set_target_conversations, set_directmessages, target }) => {
     const [showChatrooms, setShowRooms ] = useState(true)
     const [showUsers, setShowUsers ] = useState(true)
     const [showDms, setShowDms ] = useState(true)
@@ -34,11 +33,15 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
 
             const r = await fetch(API_CONVERSTATIONS)
             const convData = await r.json()
-            const userConversations = convData.filter((conv) =>  conversations_filtered.filter((c) => c.id === conv.id))
+            const userConversations = convData.filter((conv) =>  conversations_filtered.find((c) => c.id === conv.id))
 
-            set_target_conversations(userConversations[0])
-            setConversations(userConversations)
-            set_conversations(userConversations)
+            if(userConversations.length > 0){
+                set_target_conversations(userConversations[0])
+                set_directmessages(userConversations[0])
+                setConversations(userConversations)
+                set_conversations(userConversations)
+            }
+            
             setNoneChatrooms(nonUserRooms)
             setUserChatrooms(userChatrooms)
             set_chatrooms(chatroomsData)
@@ -79,6 +82,23 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
     let left = 2
     let center = 12
     let right = 2
+
+    const onReceived = (data) => {
+        const newChatroom = data['chatroom']
+        const newChannelMember = {
+            user_id: user.id,
+            chatroom_id: newChatroom.id
+        }
+        const reObj = {
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newChannelMember)
+        }
+        fetch(API_CHATROOM_MEMBERS, reObj)
+        add_chatroom(newChatroom)
+        setUserChatrooms([...userChatrooms, newChatroom])
+    }
+
 
     return(
         <Grid celled padded={false} id='workspace'>
@@ -123,7 +143,7 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
                             </Header>
                         }>
                             <Popup.Content>
-                                <NewChannelForm setUserChatrooms={setUserChatrooms} userChatrooms={userChatrooms}/>
+                                <NewChannelForm setUserChatrooms={setUserChatrooms} userChatrooms={userChatrooms} />
                             </Popup.Content>
                         </Popup>
                         
@@ -142,9 +162,7 @@ const Workspace = ({ workspace, set_chatrooms, target_chatroom, select_chatroom,
 
                     {/* Workspace Main */}
                     <Grid.Column id='workspaceMain' width={center}>
-                        {target_chatroom !== null ? <WorkspaceMainDM /> : null}
-                        {/* {target_chatroom !== null ? <WorkspaceMainChatroom /> : null} */}
-                        {/* {target_conversation !== null ? <WorkspaceMainDM /> : null}  */}
+                        {target === 'chatroom' ? (target_chatroom !== null ? <WorkspaceMainChatroom /> : null) : <WorkspaceMainDM />}
                     </Grid.Column>
 
                     {/* Workspace Right */}
@@ -183,6 +201,7 @@ const mapDispatchToProps = (dispatch) => {
         add_message: (message) => dispatch({ type: 'ADD_MESSAGE', message}),
         select_chatroom: (chatroom) => dispatch({ type: 'SELECT_CHATROOM', chatroom}),
         set_messages: (chatroom) => dispatch({ type: 'GET_MESSAGES', chatroom}),
+        set_directmessages: (conversation) => dispatch({ type: 'GET_DMS', conversation}),
         set_conversations: (conversations) => dispatch({ type: 'SET_CONVERSATIONS', conversations}),
         set_target_conversations: (conversation) => dispatch({ type: 'SET_TARGET_CONVERSATION', conversation}),
         add_chatroom: (chatroom) => dispatch({ type: 'ADD_CHATROOM', chatroom})

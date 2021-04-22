@@ -7,7 +7,7 @@ const MessageForm = ({ chatroom, user }) => {
     const [body, setBody] = useState('')
 
 
-    const SendMessage = async () => {
+    const SendMessage = () => {
         const newMsg = {
             user_id: user.id,
             chatroom_id: chatroom.id,
@@ -18,7 +18,7 @@ const MessageForm = ({ chatroom, user }) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newMsg)
         }
-        await fetch(API_CHATROOM_MESSAGES, rqObj)
+        fetch(API_CHATROOM_MESSAGES, rqObj)
     }
     
 

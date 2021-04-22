@@ -4,7 +4,7 @@ import MessageForm from './MessageForm'
 import FeedItem from './FeedItem'
 import { useEffect, useState } from "react"
 import { API_CHATROOM_MESSAGES } from '../constants'
-import { ActionCableConsumer } from 'react-actioncable-provider'
+import ChatroomCable from './ChatroomCable'
 
 
 const WorkspaceMainChatroom = ({ chatroom, send_message, chatroom_messages }) => {
@@ -26,10 +26,7 @@ const WorkspaceMainChatroom = ({ chatroom, send_message, chatroom_messages }) =>
     
     return(
         <Grid id='workspacemain'>
-            <ActionCableConsumer
-                channel = {{channel: 'ChatroomMessagesChannel', chatroom_id: chatroom.id}}
-                onReceived = {onReceived}
-            />
+            <ChatroomCable onReceived={onReceived}/>
             <Grid.Row>
                 <Header>{chatroom.name}</Header>
             </Grid.Row>
