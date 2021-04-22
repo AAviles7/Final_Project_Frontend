@@ -1,7 +1,6 @@
 import { List, Popup } from "semantic-ui-react"
 import { connect } from 'react-redux'
 import { useEffect, useState } from "react"
-import { ActionCableConsumer } from 'react-actioncable-provider'
 import { API_CHATROOMS } from '../constants'
 
 const ChatroomList = ({ chatroom, select, select_chatroom, get_chat, leaveChatroom }) => {

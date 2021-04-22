@@ -40,9 +40,9 @@ const UserList = ({ logged_user, user, select, setConversations, conversations, 
         const newConvData = await res.json()
         setConversations([...conversations, newConvData])
         set_conversations([...conversations, newConvData])
-        select('user');
         select_conversation(newConvData);
         get_dms(newConvData)
+        select('user');
     }
 
     const handleClick = () => {

@@ -1,6 +1,5 @@
 import { List } from "semantic-ui-react"
 import { connect } from 'react-redux'
-import Workspace from "../containers/Workspace"
 import { useEffect, useState } from "react"
 
 const DirectMessageList = ({ conversation, user, users, select, select_conversation, get_dms }) => {
